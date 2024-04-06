@@ -1,3 +1,24 @@
 spring:
   profiles:
     active: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/quant-helper
+    driverClassName: org.postgresql.Driver
+    username: cluster23
+    password: cluster23
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+        format_sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+springdoc:
+  swagger-ui:
+    path: /api-docs.html
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-produces-media-type: application/json
