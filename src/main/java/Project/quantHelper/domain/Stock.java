@@ -26,12 +26,9 @@ public class Stock {
     @OneToMany
     private List<CorporateInformation> corporateInformationList;
 
-    public void setStockId(Long stockId) {
-        this.stockId = stockId;
-    }
-
     @Builder
-    public Stock(String stockName, Long price, String theme, String stockPriceIndex, String status, List<CorporateInformation> corporateInformationList) {
+    public Stock(Long stockId, String stockName, Long price, String theme, String stockPriceIndex, String status, List<CorporateInformation> corporateInformationList) {
+        this.stockId = stockId;
         this.stockName = stockName;
         this.price = price;
         this.theme = theme;

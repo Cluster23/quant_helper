@@ -23,6 +23,7 @@ public class StockTest {
     public void testSaveStock() {
         // given
         Stock stock = Stock.builder()
+                .stockId(1L)
                 .stockName("samsung")
                 .price(1000L)
                 .theme("Test Theme")
@@ -30,7 +31,6 @@ public class StockTest {
                 .status("Active")
                 .build();
 
-        stock.setStockId(1L);
 
         // when
         Stock savedStock = stockRepository.save(stock);

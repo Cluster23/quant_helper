@@ -17,6 +17,7 @@ public class StockDTO {
 
     public Stock toEntity(){
         return Stock.builder()
+                .stockId(stockId)
                 .stockName(stockName)
                 .price(price)
                 .theme(theme)
