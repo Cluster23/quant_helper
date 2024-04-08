@@ -18,7 +18,7 @@ public class CorporateInformationDTO {
     private Long maxPriceYear; // 52주 최고가
     private Long minPriceYear; // 52주 최저가
 
-    public CorporateInformation toEntity(CorporateInformation corporateInformation) {
+    public CorporateInformation toEntity() {
         return CorporateInformation.builder()
                 .id(stockId)
                 .corporationName(corporationName)

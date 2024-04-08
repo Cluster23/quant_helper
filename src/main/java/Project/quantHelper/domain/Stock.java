@@ -1,11 +1,10 @@
 package Project.quantHelper.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,19 +22,26 @@ public class Stock {
     private String stockPriceIndex; // KOSPI인지 KOSDAQ인지
     private String status;
 
-    @OneToMany
-    private List<CorporateInformation> corporateInformationList;
+    // 하나의 주식은 여러개의 재무제표(분기별, 연도별)에서 사용될 수 있다. 따라서 One(주식정보)toMany(재무제표s)를 사용한다.
+    @OneToMany(mappedBy = "stock")
+    private List<FinancialStatement> financialStatementlist = new ArrayList<>();
+
+    // 하나의 주식은 단 하나의 회사와 매핑된다. 따라서 OneToOne을 사용한다.
+    @OneToOne(mappedBy = "stock")
+    private CorporateInformation  corporateInformation;
 
     @Builder
-    public Stock(Long stockId, String stockName, Long price, String theme, String stockPriceIndex, String status, List<CorporateInformation> corporateInformationList) {
+    public Stock(Long stockId, String stockName, Long price, String theme, String stockPriceIndex, String status, List<FinancialStatement> financialStatementlist, CorporateInformation corporateInformation) {
         this.stockId = stockId;
         this.stockName = stockName;
         this.price = price;
         this.theme = theme;
         this.stockPriceIndex = stockPriceIndex;
         this.status = status;
-        this.corporateInformationList = corporateInformationList;
+        this.financialStatementlist = financialStatementlist;
+        this.corporateInformation = corporateInformation;
     }
+
 
     public Stock() {
     }

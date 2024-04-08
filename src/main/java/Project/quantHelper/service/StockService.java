@@ -26,8 +26,13 @@ public class StockService {
         return stockDTO.getStockId();
     }
 
+    /**
+     * stockName으로 stock 정보를 가져온다.
+     * @param stockName
+     * @return stockDTO
+     */
     public StockDTO findByStockName(String stockName){
-         Stock stock = stockRepository.findByStockName(stockName);
+        Stock stock = stockRepository.findByStockName(stockName);
         return StockDTO.builder()
                  .stockId(stock.getStockId())
                  .stockName(stock.getStockName())

@@ -15,7 +15,7 @@ public class CorporateInformation {
         @Column(name = "corporate_information_id")
         private Long id; // PK
 
-        @ManyToOne
+        @OneToOne
         @JoinColumn(name = "stockId", referencedColumnName = "stockId")
         private Stock stock; // FK
 
@@ -24,10 +24,6 @@ public class CorporateInformation {
         private Long marketCapitalization; // 시가 총액
         private Long maxPriceYear; // 52주 최고가
         private Long minPriceYear; // 52주 최저가
-
-        public void setStock(Stock stock) {
-                this.stock = stock;
-        }
 
         @Builder
         public CorporateInformation(Long id, String corporationName, Date foundationDate, Long marketCapitalization, Long maxPriceYear, Long minPriceYear) {
