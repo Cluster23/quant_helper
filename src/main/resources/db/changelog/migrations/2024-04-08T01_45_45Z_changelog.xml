@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+    <changeSet id="1" author="parksehwan">
+        <createTable tableName="stock">
+            <column name="stock_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stock_name" type="varchar(255)"/>
+            <column name="price" type="bigint"/>
+            <column name="theme" type="varchar(255)"/>
+            <column name="stock_price_index" type="varchar(255)"/>
+            <column name="status" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="create_financial_statement_table" author="parksehwan">
+        <createTable tableName="financial_statement">
+            <column name="financial_statement_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stock_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="varchar(255)"/>
+            <column name="year" type="int"/>
+            <column name="quarter" type="int"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_financial_statement_stock"
+                                 baseTableName="financial_statement" baseColumnNames="stock_id"
+                                 referencedTableName="stock" referencedColumnNames="stock_id"/>
+    </changeSet>
+    <changeSet id="create_corporate_information_table" author="parksehwan">
+        <createTable tableName="corporate_information">
+            <column name="corporate_information_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="stock_id" type="bigint">
+                <constraints nullable="false" unique="true"/> <!-- Assuming a one-to-one relationship -->
+            </column>
+            <column name="corporation_name" type="varchar(255)"/>
+            <column name="foundation_date" type="date"/>
+            <column name="market_capitalization" type="bigint"/>
+            <column name="max_price_year" type="bigint"/>
+            <column name="min_price_year" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_corporate_information_stock"
+                                 baseTableName="corporate_information" baseColumnNames="stock_id"
+                                 referencedTableName="stock" referencedColumnNames="stock_id"/>
+    </changeSet>
+</databaseChangeLog>

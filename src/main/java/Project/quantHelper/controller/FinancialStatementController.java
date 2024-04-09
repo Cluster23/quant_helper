@@ -27,7 +27,7 @@ public class FinancialStatementController {
 
     @GetMapping("/")
     @Operation(
-            summary = "get pap by user id",
+            summary = "get financial statement",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -58,6 +58,10 @@ public class FinancialStatementController {
     public ResponseEntity<String> financialStatement(
             @ModelAttribute GetFinancialStatementRequest request
     ) {
+        System.out.println(request.getQuarter());
+        if (request.getQuarter() <= 0){
+            return ResponseEntity.badRequest().body("quater should be upper zero");
+        }
         Mono<String> financialStatement = dartService.getFinancialStatementFromDart(request.getCorpName(), request.getYear(), request.getQuarter());
         System.out.println(financialStatement.block());
         return ResponseEntity.ok().body(financialStatement.block());

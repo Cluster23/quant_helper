@@ -30,11 +30,11 @@ public class GetFinancialStatementRequest {
     private String year;
     @NotBlank(message = "{not_blank}")
     @Schema(
-            name = "quater",
-            description = "quater",
+            name = "quarter",
+            description = "quarter",
             type = "Integer",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "2"
     )
-    private int quarter;
+    private Integer quarter;
 }

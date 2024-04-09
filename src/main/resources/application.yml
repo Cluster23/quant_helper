@@ -13,8 +13,10 @@ spring:
         show_sql: true
         format_sql: true
     hibernate:
-      ddl-auto: create-drop
-
+      ddl-auto: ${DB_DDL_AUTO:none}
+  liquibase:
+    enabled: ${LIQUIBASE_ENABLED:true}
+    change-log: classpath:/db/changelog/master.xml
 springdoc:
   swagger-ui:
     path: /api-docs.html
