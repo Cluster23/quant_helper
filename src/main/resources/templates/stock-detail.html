@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Detail</title>
+</head>
+<body>
+<h2>Stock Detail</h2>
+<table>
+    <tr>
+        <th>Stock Name</th>
+        <td th:text="${stock.stockName}"></td>
+    </tr>
+    <tr>
+        <th>Price</th>
+        <td th:text="${stock.price}"></td>
+    </tr>
+    <tr>
+        <th>Theme</th>
+        <td th:text="${stock.theme}"></td>
+    </tr>
+    <tr>
+        <th>Stock Price Index</th>
+        <td th:text="${stock.stockPriceIndex}"></td>
+    </tr>
+    <tr>
+        <th>Status</th>
+        <td th:text="${stock.status}"></td>
+    </tr>
+</table>
+
+<form action="/stocks/${stock.stockName}/financial-statements" method="get">
+    <button type="submit">Show Financial Statements</button>
+</form>
+
+</body>
+</html>

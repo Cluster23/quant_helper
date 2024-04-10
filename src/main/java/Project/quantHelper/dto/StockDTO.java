@@ -3,10 +3,12 @@ package Project.quantHelper.dto;
 import Project.quantHelper.domain.Stock;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter @Setter
+@NoArgsConstructor
 public class StockDTO {
     private Long stockId;
     private String stockName;
@@ -35,5 +37,6 @@ public class StockDTO {
         this.stockPriceIndex = stockPriceIndex;
         this.status = status;
     }
+
 }
 

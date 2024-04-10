@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks List</title>
+</head>
+<body>
+<h2>Stocks List</h2>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Stock Name</th>
+        <th>Price</th>
+        <th>Theme</th>
+        <th>Stock Price Index</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 반복문을 사용하여 각 주식 정보를 테이블에 출력 -->
+    <tr th:each="stock : ${stocks}">
+        <td th:text="${stock.stockId}"></td>
+        <td th:text="${stock.stockName}"></td>
+        <td th:text="${stock.price}"></td>
+        <td th:text="${stock.theme}"></td>
+        <td th:text="${stock.stockPriceIndex}"></td>
+        <td th:text="${stock.status}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

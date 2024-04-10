@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class StockService {
@@ -41,6 +44,23 @@ public class StockService {
                  .stockPriceIndex(stock.getStockPriceIndex())
                  .status(stock.getStatus())
                  .build();
+    }
+
+    public List<StockDTO> findAll(){
+        List<Stock> stocks = stockRepository.findAll();
+        List<StockDTO> stockDTOs = new ArrayList<>();
+        for(Stock stock : stocks){
+            StockDTO stockDTO = StockDTO.builder()
+                    .stockId(stock.getStockId())
+                    .stockName(stock.getStockName())
+                    .price(stock.getPrice())
+                    .theme(stock.getTheme())
+                    .stockPriceIndex(stock.getStockPriceIndex())
+                    .status(stock.getStatus())
+                    .build();
+            stockDTOs.add(stockDTO);
+        }
+        return stockDTOs;
     }
 
 }
