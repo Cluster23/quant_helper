@@ -14,8 +14,9 @@ import java.util.List;
 @Getter
 public class Stock {
 
-    @Id
+    @Id @GeneratedValue
     private Long stockId; // PK
+    private String stockCode; // 주식 코드
     private String stockName; // 주식 이름
     private Long price; // 현재가
     private String theme; // 업종 구분
@@ -31,8 +32,8 @@ public class Stock {
     private CorporateInformation  corporateInformation;
 
     @Builder
-    public Stock(Long stockId, String stockName, Long price, String theme, String stockPriceIndex, String status, List<FinancialStatement> financialStatementlist, CorporateInformation corporateInformation) {
-        this.stockId = stockId;
+    public Stock(String stockCode, String stockName, Long price, String theme, String stockPriceIndex, String status, List<FinancialStatement> financialStatementlist, CorporateInformation corporateInformation) {
+        this.stockCode = stockCode;
         this.stockName = stockName;
         this.price = price;
         this.theme = theme;

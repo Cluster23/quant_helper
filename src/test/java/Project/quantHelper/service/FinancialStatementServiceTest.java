@@ -40,7 +40,7 @@ class FinancialStatementServiceTest {
     @Test
     void save() {
         StockDTO stockDTO = StockDTO.builder()
-                .stockId(1L)
+                .stockCode("A00")
                 .stockName("samsung")
                 .price(1000L)
                 .theme("Test Theme")
@@ -64,7 +64,7 @@ class FinancialStatementServiceTest {
     void find3yearsFinancialStatementByStockName() {
         // given
         StockDTO stockDTO = StockDTO.builder()
-                .stockId(1L)
+                .stockCode("A00")
                 .stockName("samsung")
                 .price(1000L)
                 .theme("Test Theme")

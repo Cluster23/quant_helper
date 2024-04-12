@@ -33,7 +33,7 @@ class StockServiceTest {
     void saveStockTest() {
         // given
         StockDTO stockDTO = StockDTO.builder()
-                .stockId(1L)
+                .stockCode("A00")
                 .stockName("samsung")
                 .price(1000L)
                 .theme("Test Theme")
@@ -42,7 +42,7 @@ class StockServiceTest {
                 .build();
 
         // when
-        Long savedStockId = stockService.save(stockDTO);
+        String savedStockCode = stockService.save(stockDTO);
 
         // then
         Assertions.assertThat(stockRepository.existsById(1L)).isTrue();
@@ -52,7 +52,7 @@ class StockServiceTest {
     void findByStockNameTest() {
         //given
         StockDTO stockDTO = StockDTO.builder()
-                .stockId(1L)
+                .stockCode("A00")
                 .stockName("samsung")
                 .price(1000L)
                 .theme("Test Theme")

@@ -1,7 +1,5 @@
 package Project.quantHelper.controller;
 
-import Project.quantHelper.dto.request.GetApprovalRequest;
-import Project.quantHelper.dto.request.GetFinancialStatementRequest;
 import Project.quantHelper.dto.response.ErrorResponse;
 import Project.quantHelper.dto.response.SuccessResponse;
 import Project.quantHelper.service.KisService;
@@ -14,13 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/approval")
+@RequestMapping("/access-token")
 @RequiredArgsConstructor
 public class ApprovalKeyController {
 
@@ -29,7 +26,7 @@ public class ApprovalKeyController {
 
     @GetMapping("/")
     @Operation(
-            summary = "get Kis Approval Key",
+            summary = "get Kis Access Token",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -57,12 +54,9 @@ public class ApprovalKeyController {
                     )
             }
     )
-    public ResponseEntity<String> approvalKey(
-            @ModelAttribute GetApprovalRequest request
-            ) {
-        System.out.println(request.getApprovalKey());
-        Mono<String> approvalKey = kisService.getApprovalKeyFromKis();
-        System.out.println(approvalKey.block());
-        return ResponseEntity.ok().body(approvalKey.block());
+    public ResponseEntity<String> approvalKey() {
+        Mono<String> accessToken = kisService.getAccessTokenFromKis();
+        System.out.println(accessToken.block());
+        return ResponseEntity.ok().body(accessToken.block());
     }
 }

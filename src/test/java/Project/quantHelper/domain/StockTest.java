@@ -23,7 +23,7 @@ public class StockTest {
     public void testSaveStock() {
         // given
         Stock stock = Stock.builder()
-                .stockId(1L)
+                .stockCode("A00")
                 .stockName("samsung")
                 .price(1000L)
                 .theme("Test Theme")
