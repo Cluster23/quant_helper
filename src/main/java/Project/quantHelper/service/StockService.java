@@ -21,12 +21,12 @@ public class StockService {
     /**
      * stockDTO를 매개변수로 받아서, entity로 변환한 다음 Stock 테이블에 저장한다.
      * @param stockDTO
-     * @return stockId
+     * @return stockCode
      */
     @Transactional
-    public Long save(StockDTO stockDTO){
+    public String save(StockDTO stockDTO){
         stockRepository.save(stockDTO.toEntity());
-        return stockDTO.getStockId();
+        return stockDTO.getStockCode();
     }
 
     /**
@@ -37,7 +37,7 @@ public class StockService {
     public StockDTO findByStockName(String stockName){
         Stock stock = stockRepository.findByStockName(stockName);
         return StockDTO.builder()
-                 .stockId(stock.getStockId())
+                 .stockCode(stock.getStockCode())
                  .stockName(stock.getStockName())
                  .price(stock.getPrice())
                  .theme(stock.getTheme())
@@ -51,7 +51,7 @@ public class StockService {
         List<StockDTO> stockDTOs = new ArrayList<>();
         for(Stock stock : stocks){
             StockDTO stockDTO = StockDTO.builder()
-                    .stockId(stock.getStockId())
+                    .stockCode(stock.getStockCode())
                     .stockName(stock.getStockName())
                     .price(stock.getPrice())
                     .theme(stock.getTheme())
