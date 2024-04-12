@@ -1,14 +1,22 @@
 package Project.quantHelper.dto.request;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class GetStockRequest {
-
+    @NotBlank(message = "{not_blank}")
+    @Schema(
+            name = "PDNO",
+            description = "stock id",
+            type = "String",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "000660"
+    )
+    private String stockCode;
 }

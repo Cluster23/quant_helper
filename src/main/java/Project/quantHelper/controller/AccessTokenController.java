@@ -3,6 +3,7 @@ package Project.quantHelper.controller;
 import Project.quantHelper.dto.response.ErrorResponse;
 import Project.quantHelper.dto.response.SuccessResponse;
 import Project.quantHelper.service.KisService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +20,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/access-token")
 @RequiredArgsConstructor
-public class ApprovalKeyController {
+public class AccessTokenController {
 
     @Autowired
     private final KisService kisService;
@@ -32,7 +33,7 @@ public class ApprovalKeyController {
                             responseCode = "200",
                             description = "Successful operation",
                             content = @Content(
-                                    mediaType = "application/json",
+                                    mediaType = "text/plain",
                                     schema = @Schema(implementation = SuccessResponse.class)
                             )
                     ),
@@ -54,9 +55,8 @@ public class ApprovalKeyController {
                     )
             }
     )
-    public ResponseEntity<String> approvalKey() {
-        Mono<String> accessToken = kisService.getAccessTokenFromKis();
-        System.out.println(accessToken.block());
-        return ResponseEntity.ok().body(accessToken.block());
+    public ResponseEntity<String> accessToken() throws JsonProcessingException {
+        String accessToken = kisService.getAccessTokenFromKis();
+        return ResponseEntity.ok().body(accessToken);
     }
 }

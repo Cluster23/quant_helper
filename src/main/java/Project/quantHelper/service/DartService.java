@@ -44,7 +44,7 @@ public class DartService {
                 .uri(uriBuilder -> uriBuilder
                         .path(baseUrl + "/api/fnlttSinglAcnt.json")
                         .queryParam("crtfc_key", apiKey)
-                        .queryParam("corp_code", stockDTO.getStockId())
+                        .queryParam("corp_code", stockDTO.getStockCode())
                         .queryParam("bsns_year", year)
                         .queryParam("reprt_code", reprtCode[quarter - 1])
                         .build())
