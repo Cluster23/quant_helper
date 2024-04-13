@@ -42,9 +42,11 @@ public class DartService {
         StockDTO stockDTO = stockService.findByStockName(corpName);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(baseUrl + "/api/fnlttSinglAcnt.json")
+                        .scheme("https")
+                        .host(baseUrl)
+                        .path("/api/fnlttSinglAcnt.json")
                         .queryParam("crtfc_key", apiKey)
-                        .queryParam("corp_code", stockDTO.getStockCode())
+                        .queryParam("corp_code", stockDTO.getCorpCode())
                         .queryParam("bsns_year", year)
                         .queryParam("reprt_code", reprtCode[quarter - 1])
                         .build())

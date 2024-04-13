@@ -43,6 +43,7 @@ public class StockService {
                  .theme(stock.getTheme())
                  .stockPriceIndex(stock.getStockPriceIndex())
                  .status(stock.getStatus())
+                 .corpCode(stock.getCorpCode())
                  .build();
     }
 
@@ -57,6 +58,7 @@ public class StockService {
                     .theme(stock.getTheme())
                     .stockPriceIndex(stock.getStockPriceIndex())
                     .status(stock.getStatus())
+                    .corpCode(stock.getCorpCode())
                     .build();
             stockDTOs.add(stockDTO);
         }

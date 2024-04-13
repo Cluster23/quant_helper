@@ -16,6 +16,7 @@ public class StockDTO {
     private String theme;
     private String stockPriceIndex;
     private String status;
+    private String corpCode;
 
     public Stock toEntity(){
         return Stock.builder()
@@ -25,17 +26,19 @@ public class StockDTO {
                 .theme(theme)
                 .stockPriceIndex(stockPriceIndex)
                 .status(status)
+                .corpCode(corpCode)
                 .build();
     }
 
     @Builder
-    public StockDTO(String stockCode, String stockName, Long price, String theme, String stockPriceIndex, String status) {
+    public StockDTO(String stockCode, String stockName, Long price, String theme, String stockPriceIndex, String status, String corpCode) {
         this.stockCode = stockCode;
         this.stockName = stockName;
         this.price = price;
         this.theme = theme;
         this.stockPriceIndex = stockPriceIndex;
         this.status = status;
+        this.corpCode = corpCode;
     }
 
 }
