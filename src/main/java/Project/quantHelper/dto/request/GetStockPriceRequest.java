@@ -12,13 +12,13 @@ import java.time.LocalDate;
 public class GetStockPriceRequest {
     @NotBlank(message = "{not_blank}")
     @Schema(
-            name = "stockCode",
-            description = "stock code",
+            name = "stockName",
+            description = "stock name",
             type = "String",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "000660"
     )
-    private String stockCode;
+    private String stockName;
 
     @NotBlank(message = "{not_blank}")
     @Schema(

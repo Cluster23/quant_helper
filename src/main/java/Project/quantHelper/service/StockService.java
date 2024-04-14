@@ -71,4 +71,9 @@ public class StockService {
         Stock stock = stockRepository.findByStockCode(stockCode);
         return stock.getStockId();
     }
+
+    public String findStockCodeByStockName(String stockName) {
+        Stock stock = stockRepository.findByStockCode(stockName);
+        return stock.getStockCode();
+    }
 }

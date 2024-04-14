@@ -12,11 +12,11 @@ import lombok.*;
 public class GetStockRequest {
     @NotBlank(message = "{not_blank}")
     @Schema(
-            name = "PDNO",
-            description = "stock code",
+            name = "stockName",
+            description = "stock name",
             type = "String",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "000660"
     )
-    private String stockCode;
+    private String stockName;
 }

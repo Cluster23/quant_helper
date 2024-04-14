@@ -80,14 +80,14 @@ public class StockController {
                     )
             }
     )
-    public ResponseEntity<StockDTO> stock(@ModelAttribute("PDNO") GetStockRequest request) throws JsonProcessingException {
-        System.out.println(request.getStockCode());
-        if (request.getStockCode().length() > 6){
-            System.out.println("stock id should be smaller than 6 digits");
+    public ResponseEntity<StockDTO> stock(@ModelAttribute GetStockRequest request) throws JsonProcessingException {
+        String stockCodeByStockName = stockService.findStockCodeByStockName(request.getStockName());
+        if (stockCodeByStockName.length() < 6){
+            System.out.println("stock code should be longer than 6");
             return ResponseEntity.badRequest().body(null);
         }
-        Mono<String> stockNameByCode = kisService.getStockNameByCode(request.getStockCode()); // 주식 코드로 주식 이름 조회
-        Mono<String> stockInfoByCode = kisService.getStockInfoByCode(request.getStockCode()); // 주식 코드로 주식 정보 조회
+        Mono<String> stockNameByCode = kisService.getStockNameByCode(stockCodeByStockName); // 주식 코드로 주식 이름 조회
+        Mono<String> stockInfoByCode = kisService.getStockInfoByCode(stockCodeByStockName); // 주식 코드로 주식 정보 조회
         String stockNameResponse = stockNameByCode.block();
         String stockInfoResponse = stockInfoByCode.block();
 
@@ -150,12 +150,12 @@ public class StockController {
             }
     )
     public ResponseEntity<StockPriceDTO> stockPrice(@ModelAttribute GetStockPriceRequest request) throws JsonProcessingException {
-        System.out.println(request.getStockCode());
-        if (request.getStockCode().length() > 6){
-            System.out.println("stock id should be smaller than 6 digits");
+        String stockCodeByStockName = stockService.findStockCodeByStockName(request.getStockName());
+        if (stockCodeByStockName.length() < 6){
+            System.out.println("stock code should be longer than 6");
             return ResponseEntity.badRequest().body(null);
         }
-        Mono<String> stockPriceByCodeAndDate = kisService.getStockPriceByCodeAndDate(request.getStockCode(), request.getStartDate(), request.getEndDate()); // 주식 코드로 주식 정보 조회
+        Mono<String> stockPriceByCodeAndDate = kisService.getStockPriceByCodeAndDate(stockCodeByStockName, request.getStartDate(), request.getEndDate()); // 주식 코드로 주식 정보 조회
         String stockPriceResponse = stockPriceByCodeAndDate.block();
 
         log.info(stockPriceResponse);
@@ -170,7 +170,7 @@ public class StockController {
 
         StockPriceDTO stockPriceDTO = StockPriceDTO.builder()
                 .date(LocalDate.parse(request.getStartDate(), formatter))
-                .stockId(stockService.findStockIdByStockCode(request.getStockCode()))
+                .stockId(stockService.findStockIdByStockCode(stockCodeByStockName))
                 .maxPriceDay(Long.valueOf(stockPriceMap.get("stck_hgpr")))
                 .minPriceDay(Long.valueOf(stockPriceMap.get("stck_lwpr")))
                 .openPrice(Long.valueOf(stockPriceMap.get("stck_oprc")))
