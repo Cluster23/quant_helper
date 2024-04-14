@@ -10,7 +10,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class CorporateInformationDTO {
-    private Long id; // PK
     private Long stockId; // FK
     private String corporationName; // 회사 이름
     private Date foundationDate;
@@ -20,7 +19,6 @@ public class CorporateInformationDTO {
 
     public CorporateInformation toEntity() {
         return CorporateInformation.builder()
-                .id(stockId)
                 .corporationName(corporationName)
                 .foundationDate(foundationDate)
                 .marketCapitalization(marketCapitalization)
@@ -30,8 +28,7 @@ public class CorporateInformationDTO {
     }
 
     @Builder
-    public CorporateInformationDTO(Long id, Long stockId, String corporationName, Date foundationDate, Long marketCapitalization, Long maxPriceYear, Long minPriceYear) {
-        this.id = id;
+    public CorporateInformationDTO(Long stockId, String corporationName, Date foundationDate, Long marketCapitalization, Long maxPriceYear, Long minPriceYear) {
         this.stockId = stockId;
         this.corporationName = corporationName;
         this.foundationDate = foundationDate;

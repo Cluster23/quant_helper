@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 public class Stock {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stockId; // PK
     private String stockCode; // 주식 코드
     private String stockName; // 주식 이름
@@ -31,6 +31,9 @@ public class Stock {
     // 하나의 주식은 단 하나의 회사와 매핑된다. 따라서 OneToOne을 사용한다.
     @OneToOne(mappedBy = "stock")
     private CorporateInformation  corporateInformation;
+
+    @OneToMany(mappedBy = "stock")
+    private List<StockPrice> stockPriceList = new ArrayList<>();
 
     @Builder
     public Stock(String stockCode, String stockName, Long price, String theme, String stockPriceIndex, String status, String corpCode, List<FinancialStatement> financialStatementlist, CorporateInformation corporateInformation) {

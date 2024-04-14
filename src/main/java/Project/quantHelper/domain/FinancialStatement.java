@@ -13,7 +13,7 @@ import java.time.Year;
 @Getter
 public class FinancialStatement {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "financial_statement_id")
     private Long id; // PK
 

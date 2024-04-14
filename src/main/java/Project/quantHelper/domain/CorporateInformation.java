@@ -11,7 +11,7 @@ import java.util.Date;
 public class CorporateInformation {
 
         @Id
-        @GeneratedValue
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "corporate_information_id")
         private Long id; // PK
 

@@ -13,7 +13,7 @@ public class GetStockRequest {
     @NotBlank(message = "{not_blank}")
     @Schema(
             name = "PDNO",
-            description = "stock id",
+            description = "stock code",
             type = "String",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "000660"
