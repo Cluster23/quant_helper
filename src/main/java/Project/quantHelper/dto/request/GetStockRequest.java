@@ -16,7 +16,7 @@ public class GetStockRequest {
             description = "stock name",
             type = "String",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "000660"
+            example = "SK하이닉스"
     )
     private String stockName;
 }

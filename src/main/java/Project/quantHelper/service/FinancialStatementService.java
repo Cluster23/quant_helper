@@ -49,7 +49,7 @@ public class FinancialStatementService {
      * @return financialStatmentDTO
      */
     public List<FinancialStatementDTO> find3yearsFinancialStatementByStockName(String stockName){
-        Stock foundStock = stockRepository.findByStockName(stockName); // stockName으로 Stock Entity 찾기
+        Stock foundStock = stockRepository.findByStockName(stockName).get(0); // stockName으로 Stock Entity 찾기
         List<FinancialStatement> financialStatements = financialStatementRepository.findAllByStock(foundStock); // Stock으로 재무제표 모두 가져오기
 
         List<FinancialStatementDTO> fsIn3years = new ArrayList<>();

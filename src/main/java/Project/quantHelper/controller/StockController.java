@@ -80,19 +80,17 @@ public class StockController {
                     )
             }
     )
-    public ResponseEntity<StockDTO> stock(@ModelAttribute GetStockRequest request) throws JsonProcessingException {
-        String stockCodeByStockName = stockService.findStockCodeByStockName(request.getStockName());
-        if (stockCodeByStockName.length() < 6){
+    public ResponseEntity<String> stock(@ModelAttribute GetStockRequest request) throws JsonProcessingException {
+        StockDTO stockDTO = stockService.findByStockName(request.getStockName());
+        String stockCode = stockDTO.getStockCode();
+        if (stockCode.length() < 6){
             System.out.println("stock code should be longer than 6");
             return ResponseEntity.badRequest().body(null);
         }
-        Mono<String> stockNameByCode = kisService.getStockNameByCode(stockCodeByStockName); // 주식 코드로 주식 이름 조회
-        Mono<String> stockInfoByCode = kisService.getStockInfoByCode(stockCodeByStockName); // 주식 코드로 주식 정보 조회
+        Mono<String> stockNameByCode = kisService.getStockNameByCode(stockCode); // 주식 코드로 주식 이름 조회
+        Mono<String> stockInfoByCode = kisService.getStockInfoByCode(stockCode); // 주식 코드로 주식 정보 조회
         String stockNameResponse = stockNameByCode.block();
         String stockInfoResponse = stockInfoByCode.block();
-
-        log.info(stockNameResponse);
-        log.info(stockInfoResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String,String> stockMap =
@@ -101,19 +99,19 @@ public class StockController {
                 (Map<String, String>) objectMapper.readValue(stockInfoResponse, Map.class).get("output");
         // 응답 Json이 두번 감싸져 있는 형태 {"output" : {"stockName" : "samsung"}} 이런식으로
 
-        log.info(stockInfoMap.toString());
+        stockCode = stockMap.get("pdno");
+        stockCode = stockCode.substring(Math.max(stockCode.length() - 6, 0));
 
-        StockDTO stockDTO = StockDTO.builder()
-                .stockCode(stockMap.get("pdno")) // 주식 코드
-                .stockName(stockMap.get("prdt_abrv_name")) // 주식 이름
-                .stockPriceIndex(stockInfoMap.get("rprs_mrkt_kor_name")) // KOSPI200, KOSPI, KOSDAQ 등
-                .price(Long.valueOf(stockInfoMap.get("stck_oprc"))) // 가격 (당일 종가)
-                .theme(stockInfoMap.get("bstp_kor_isnm")) // 분야
-                .status(stockInfoMap.get("iscd_stat_cls_code")) // status Code
-                .build();
+        String stockName = stockMap.get("prdt_abrv_name");
+        String stockPriceIndex = stockInfoMap.get("rprs_mrkt_kor_name");
+        Long price = Long.valueOf(stockInfoMap.get("stck_oprc"));
+        String theme = stockInfoMap.get("bstp_kor_isnm");
+        String status = stockInfoMap.get("iscd_stat_cls_code");
+        String corpCode = stockDTO.getCorpCode();
 
-        stockService.save(stockDTO);
-        return ResponseEntity.ok().body(stockDTO);
+        int i = stockService.updateStock(stockName, stockCode, stockPriceIndex, price, theme, status, corpCode);
+
+        return ResponseEntity.ok().body(i+"개의 row 업데이트");
     }
 
     /**
@@ -150,15 +148,14 @@ public class StockController {
             }
     )
     public ResponseEntity<StockPriceDTO> stockPrice(@ModelAttribute GetStockPriceRequest request) throws JsonProcessingException {
-        String stockCodeByStockName = stockService.findStockCodeByStockName(request.getStockName());
-        if (stockCodeByStockName.length() < 6){
+        StockDTO byStockName = stockService.findByStockName(request.getStockName());
+        String stockCode = byStockName.getStockCode();
+        if (stockCode.length() < 6){
             System.out.println("stock code should be longer than 6");
             return ResponseEntity.badRequest().body(null);
         }
-        Mono<String> stockPriceByCodeAndDate = kisService.getStockPriceByCodeAndDate(stockCodeByStockName, request.getStartDate(), request.getEndDate()); // 주식 코드로 주식 정보 조회
+        Mono<String> stockPriceByCodeAndDate = kisService.getStockPriceByCodeAndDate(stockCode, request.getStartDate(), request.getEndDate()); // 주식 코드로 주식 정보 조회
         String stockPriceResponse = stockPriceByCodeAndDate.block();
-
-        log.info(stockPriceResponse);
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String,String>> stockPriceJson = (List<Map<String, String>>) objectMapper.readValue(stockPriceResponse, Map.class).get("output2");
@@ -170,7 +167,7 @@ public class StockController {
 
         StockPriceDTO stockPriceDTO = StockPriceDTO.builder()
                 .date(LocalDate.parse(request.getStartDate(), formatter))
-                .stockId(stockService.findStockIdByStockCode(stockCodeByStockName))
+                .stockId(stockService.findStockIdByStockCode(stockCode))
                 .maxPriceDay(Long.valueOf(stockPriceMap.get("stck_hgpr")))
                 .minPriceDay(Long.valueOf(stockPriceMap.get("stck_lwpr")))
                 .openPrice(Long.valueOf(stockPriceMap.get("stck_oprc")))

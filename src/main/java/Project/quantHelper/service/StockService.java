@@ -6,12 +6,15 @@ import Project.quantHelper.dto.StockPriceDTO;
 import Project.quantHelper.repository.StockRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StockService {
@@ -37,7 +40,7 @@ public class StockService {
      * @return stockDTO
      */
     public StockDTO findByStockName(String stockName) {
-        Stock stock = stockRepository.findByStockName(stockName);
+        Stock stock = stockRepository.findByStockName(stockName).get(0);
         return StockDTO.builder()
                  .stockCode(stock.getStockCode())
                  .stockName(stock.getStockName())
@@ -73,7 +76,16 @@ public class StockService {
     }
 
     public String findStockCodeByStockName(String stockName) {
-        Stock stock = stockRepository.findByStockCode(stockName);
+        Stock stock = stockRepository.findByStockName(stockName).get(0);
+        log.info(stock.getStockCode());
         return stock.getStockCode();
+    }
+
+    /**
+     * stockId, stockCode, stockName, corpCode는 고정하고, 나머지 컬럼은 업데이트하는 메소드
+     */
+    @Transactional
+    public int updateStock(String stockName, String stockCode, String stockPriceIndex, Long price, String theme, String status, String corpCode){
+        return stockRepository.updateStockByStockName(stockName, stockCode, stockPriceIndex, price, theme, status, corpCode);
     }
 }
