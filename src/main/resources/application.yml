@@ -21,6 +21,7 @@ springdoc:
   swagger-ui:
     path: /api-docs.html
   api-docs:
-    path: /api-docs
+    path: /api-docs.yaml
+    enabled: true
   show-actuator: true
   default-produces-media-type: application/json

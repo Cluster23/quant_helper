@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -25,9 +26,9 @@ public class FinancialStatementController {
 
     private final DartService dartService;
 
-    @GetMapping("/")
+    @PostMapping("/")
     @Operation(
-            summary = "get financial statement",
+            summary = "get financial statement by stock name",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -56,7 +57,7 @@ public class FinancialStatementController {
             }
     )
     public ResponseEntity<String> financialStatement(
-            @ModelAttribute GetFinancialStatementRequest request
+            @RequestBody GetFinancialStatementRequest request
     ) {
         System.out.println(request.getQuarter());
         if (request.getQuarter() <= 0){
