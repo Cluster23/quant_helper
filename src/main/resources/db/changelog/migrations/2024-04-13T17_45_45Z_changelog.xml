@@ -11,4 +11,10 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="chang_financial_statement_content_size" author="parksehwan">
+        <modifyDataType
+                tableName="financial_statement"
+                columnName="content"
+                newDataType="TEXT" />
+    </changeSet>
 </databaseChangeLog>
