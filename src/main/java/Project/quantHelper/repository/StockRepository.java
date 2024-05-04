@@ -9,9 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
+
+    @Override
+    Optional<Stock> findById(Long stockId);
 
     @Modifying
     @Query("UPDATE Stock s SET s.stockCode = :stockCode, s.stockPriceIndex = :stockPriceIndex, s.price = :price, s.theme = :theme, s.status = :status, s.corpCode = :corpCode WHERE s.stockName = :stockName")

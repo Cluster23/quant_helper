@@ -7,6 +7,7 @@ import Project.quantHelper.repository.FinancialStatementRepository;
 import Project.quantHelper.repository.StockRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class FinancialStatementService {
      */
     @Transactional
     public Long save(FinancialStatementDTO financialStatementDTO){
-        Stock foundStock = stockRepository.findById(financialStatementDTO.getStockId()).get();
+        Stock foundStock = stockRepository.findById(financialStatementDTO.getStockId()).orElseThrow(() -> new RuntimeException());
         FinancialStatement financialStatement = FinancialStatement.builder()
                 .content(financialStatementDTO.getContent())
                 .year(financialStatementDTO.getYear())
@@ -59,7 +60,7 @@ public class FinancialStatementService {
             if(fs.getYear() > (today.getYear() - 3)){
                 // 3년 내의 재무제표면 일단 fsIn3years 리스트에 넣기
                 FinancialStatementDTO fsDTO = FinancialStatementDTO.builder()
-                        .stockId(fs.getId())
+                        .stockId(fs.getStock().getStockId())
                         .year(fs.getYear())
                         .quarter(fs.getQuarter())
                         .content(fs.getContent())
