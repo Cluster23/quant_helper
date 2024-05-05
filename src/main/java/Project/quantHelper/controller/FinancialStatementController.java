@@ -73,7 +73,7 @@ public class FinancialStatementController {
         if (request.getQuarter() <= 0){
             return ResponseEntity.badRequest().body("quater should be upper zero");
         }
-        StockDTO stockDTO = stockService.findByStockName(request.getCorpName());
+        StockDTO stockDTO = stockService.getStockDTOByStockName(request.getCorpName());
         Mono<String> financialStatementResponse = dartService.getFinancialStatementFromDart(stockDTO, request.getYear(), request.getQuarter());
         String financialStatement = financialStatementResponse.block();
         FinancialStatementDTO financialStatementDTO = FinancialStatementDTO.builder()
