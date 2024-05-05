@@ -42,6 +42,7 @@ public class StockService {
     public StockDTO getStockDTOByStockName(String stockName) {
         Stock stock = stockRepository.findByStockName(stockName);
         return StockDTO.builder()
+                 .stockId(stock.getStockId())
                  .stockCode(stock.getStockCode())
                  .stockName(stock.getStockName())
                  .price(stock.getPrice())

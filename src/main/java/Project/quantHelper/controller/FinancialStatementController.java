@@ -1,10 +1,15 @@
 package Project.quantHelper.controller;
 
+import Project.quantHelper.dto.FinancialStatementDTO;
+import Project.quantHelper.dto.StockDTO;
 import Project.quantHelper.dto.request.GetFinancialStatementRequest;
 import Project.quantHelper.dto.response.ErrorResponse;
 import Project.quantHelper.dto.response.SuccessResponse;
 import Project.quantHelper.service.DartService;
 import Project.quantHelper.service.FinancialStatementService;
+import Project.quantHelper.service.StockService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,12 +24,18 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/financial-statement")
 @RequiredArgsConstructor
 public class FinancialStatementController {
 
     private final DartService dartService;
+
+    private final StockService stockService;
+
+    private final FinancialStatementService financialStatementService;
 
     @PostMapping("/")
     @Operation(
@@ -59,13 +70,20 @@ public class FinancialStatementController {
     public ResponseEntity<String> financialStatement(
             @RequestBody GetFinancialStatementRequest request
     ) {
-        System.out.println(request.getQuarter());
         if (request.getQuarter() <= 0){
             return ResponseEntity.badRequest().body("quater should be upper zero");
         }
-        Mono<String> financialStatement = dartService.getFinancialStatementFromDart(request.getCorpName(), request.getYear(), request.getQuarter());
-        System.out.println(financialStatement.block());
-        return ResponseEntity.ok().body(financialStatement.block());
+        StockDTO stockDTO = stockService.findByStockName(request.getCorpName());
+        Mono<String> financialStatementResponse = dartService.getFinancialStatementFromDart(stockDTO, request.getYear(), request.getQuarter());
+        String financialStatement = financialStatementResponse.block();
+        FinancialStatementDTO financialStatementDTO = FinancialStatementDTO.builder()
+                .stockId(stockDTO.getStockID())
+                .year(request.getYear())
+                .quarter(request.getQuarter())
+                .content(financialStatement)
+                .build();
+        financialStatementService.save(financialStatementDTO);
+        return ResponseEntity.ok().body(financialStatement);
 
     }
 }
