@@ -39,8 +39,8 @@ public class StockService {
      * @param stockName
      * @return stockDTO
      */
-    public StockDTO findByStockName(String stockName) {
-        Stock stock = stockRepository.findByStockName(stockName).get(0);
+    public StockDTO getStockDTOByStockName(String stockName) {
+        Stock stock = stockRepository.findByStockName(stockName);
         return StockDTO.builder()
                  .stockCode(stock.getStockCode())
                  .stockName(stock.getStockName())
@@ -52,7 +52,7 @@ public class StockService {
                  .build();
     }
 
-    public List<StockDTO> findAll() {
+    public List<StockDTO> getAllStockDTOs() {
         List<Stock> stocks = stockRepository.findAll();
         List<StockDTO> stockDTOs = new ArrayList<>();
         for (Stock stock : stocks) {
@@ -76,7 +76,7 @@ public class StockService {
     }
 
     public String findStockCodeByStockName(String stockName) {
-        Stock stock = stockRepository.findByStockName(stockName).get(0);
+        Stock stock = stockRepository.findByStockName(stockName);
         log.info(stock.getStockCode());
         return stock.getStockCode();
     }

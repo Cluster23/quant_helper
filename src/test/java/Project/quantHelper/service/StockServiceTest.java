@@ -24,11 +24,6 @@ class StockServiceTest {
     @Autowired
     StockService stockService;
 
-    @AfterEach
-    void clear() {
-        stockRepository.deleteAll();
-    }
-
     @Test
     void saveStockTest() {
         // given
@@ -51,20 +46,11 @@ class StockServiceTest {
     @Test
     void findByStockNameTest() {
         //given
-        StockDTO stockDTO = StockDTO.builder()
-                .stockCode("A00")
-                .stockName("samsung")
-                .price(1000L)
-                .theme("Test Theme")
-                .stockPriceIndex("KOSPI")
-                .status("Active")
-                .build();
-        stockService.save(stockDTO);
 
         //when
-        StockDTO foundStockDTO = stockService.findByStockName("samsung");
+        StockDTO foundStockDTO = stockService.getStockDTOByStockName("삼성전자");
 
         //then
-        Assertions.assertThat(foundStockDTO.getTheme()).isEqualTo("Test Theme");
+        Assertions.assertThat(foundStockDTO.getStockName()).isEqualTo("삼성전자");
     }
 }

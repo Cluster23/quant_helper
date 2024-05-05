@@ -22,14 +22,12 @@ public class KisAccessToken {
     private String accessToken;
 
     /**
-     * 한국 투자 증권 API에 접근하기 위한 Access Token를 반환하는 메소드
-     * @return String AccessToken
+     * 한국 투자 증권 API에 접근하기 위한 Access Token를 받아와서 빈 내부에 저장
      */
     public KisAccessToken(WebClient webClient,
                           @Value("${spring.kis-api.endpoint-url}") String baseUrl,
                           @Value("${spring.kis-api.app-key}")String appKey,
                           @Value("${spring.kis-api.app-secret-key}") String appSecretKey) throws JsonProcessingException {
-        log.info(baseUrl);
         Map<String, String> bodyMap = new HashMap<>();
         bodyMap.put("grant_type", "client_credentials");
         bodyMap.put("appkey", appKey);

@@ -39,7 +39,7 @@ public class DartService {
      */
     public Mono<String> getFinancialStatementFromDart(String corpName, String year, int quarter) {
         String[] reprtCode = {"11013", "11012", "11014", "11011"};
-        StockDTO stockDTO = stockService.findByStockName(corpName);
+        StockDTO stockDTO = stockService.getStockDTOByStockName(corpName);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")

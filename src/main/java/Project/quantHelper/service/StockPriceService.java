@@ -7,10 +7,9 @@ import Project.quantHelper.repository.StockPriceRepository;
 import Project.quantHelper.repository.StockRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
@@ -35,4 +34,24 @@ public class StockPriceService {
         stockPriceRepository.save(stockPrice);
         return stockPrice.getId();
     }
+
+    public StockPriceDTO getStockPriceDTOByStockIdAndDate(Long stockId, LocalDate startDate){
+        StockPrice stockPrice = stockPriceRepository.findStockPriceByStockAndDate(stockRepository.findById(stockId).get(), startDate);
+
+        if(stockPrice != null) {
+            StockPriceDTO stockPriceDTO = StockPriceDTO.builder()
+                    .stockId(stockId)
+                    .date(startDate)
+                    .maxPriceDay(stockPrice.getMaxPriceDay())
+                    .minPriceDay(stockPrice.getMinPriceDay())
+                    .openPrice(stockPrice.getOpenPrice())
+                    .closePrice(stockPrice.getClosePrice())
+                    .tradingVolume(stockPrice.getTradingVolume())
+                    .build();
+            return stockPriceDTO;
+        } else {
+            return null;
+        }
+    }
+
 }

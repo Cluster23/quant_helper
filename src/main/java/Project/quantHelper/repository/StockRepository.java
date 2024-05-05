@@ -22,7 +22,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
                                @Param("theme") String theme,
                                @Param("status") String status,
                                @Param("corpCode") String corpCode);
-    ArrayList<Stock> findByStockName(String stockName);
+    Stock findByStockName(String stockName);
     Stock findByStockCode(String stockCode);
     List<Stock> findAll();
 }
