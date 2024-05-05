@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 public class StockDTO {
+    private long stockID;
     private String stockCode;
     private String stockName;
     private Long price;
@@ -31,7 +32,8 @@ public class StockDTO {
     }
 
     @Builder
-    public StockDTO(String stockCode, String stockName, Long price, String theme, String stockPriceIndex, String status, String corpCode) {
+    public StockDTO(long stockId, String stockCode, String stockName, Long price, String theme, String stockPriceIndex, String status, String corpCode) {
+        this.stockID = stockId;
         this.stockCode = stockCode;
         this.stockName = stockName;
         this.price = price;

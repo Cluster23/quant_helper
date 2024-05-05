@@ -23,11 +23,11 @@ public class GetFinancialStatementRequest {
     @NotBlank(message = "{not_blank}")
     @Schema(
             name = "year",
-            type = "String",
+            type = "Integer",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "2023"
     )
-    private String year;
+    private Integer year;
     @NotBlank(message = "{not_blank}")
     @Schema(
             name = "quarter",
