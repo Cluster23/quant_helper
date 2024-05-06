@@ -74,7 +74,7 @@ public class FinancialStatementController {
             return ResponseEntity.badRequest().body("quater should be upper zero");
         }
         String financialStatementContent = "";
-        StockDTO stockDTO = stockService.findByStockName(request.getCorpName());
+        StockDTO stockDTO = stockService.getStockDTOByStockName(request.getCorpName());
         try {
             FinancialStatementDTO financialStatementDTO = financialStatementService.findFinancialStatementByStockId(stockDTO.getStockID(), request.getYear(), request.getQuarter());
             financialStatementContent = financialStatementDTO.getContent();
