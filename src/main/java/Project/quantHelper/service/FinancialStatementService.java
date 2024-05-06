@@ -45,6 +45,27 @@ public class FinancialStatementService {
     }
 
     /**
+     * StockId와 연도, 분기에 해당하는 재무제표를 찾는 메소드
+     * @param stockId, year, quarter
+     * @return financialStatment
+     */
+    public FinancialStatementDTO findFinancialStatementByStockId(Long stockId, int year, int quarter) {
+        Optional<FinancialStatement> financialStatement = financialStatementRepository.findByStockIdAndYearAndQuarter(stockId, year, quarter);
+        if (financialStatement.isPresent()) {
+            FinancialStatement fs = financialStatement.get();
+            FinancialStatementDTO fsDTO = FinancialStatementDTO.builder()
+                    .stockId(fs.getStock().getStockId())
+                    .year(fs.getYear())
+                    .quarter(fs.getQuarter())
+                    .content(fs.getContent())
+                    .build();
+            return fsDTO;
+        } else {
+            throw new RuntimeException("No financial statement found for stock ID " + stockId + " for year " + year + " and quarter " + quarter);
+        }
+    }
+
+    /**
      * 주식 이름으로 3년치 재무제표를 찾는 메소드
      * @param stockName
      * @return financialStatmentDTO

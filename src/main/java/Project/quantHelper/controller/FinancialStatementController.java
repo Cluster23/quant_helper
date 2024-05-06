@@ -73,17 +73,22 @@ public class FinancialStatementController {
         if (request.getQuarter() <= 0){
             return ResponseEntity.badRequest().body("quater should be upper zero");
         }
-        StockDTO stockDTO = stockService.getStockDTOByStockName(request.getCorpName());
-        Mono<String> financialStatementResponse = dartService.getFinancialStatementFromDart(stockDTO, request.getYear(), request.getQuarter());
-        String financialStatement = financialStatementResponse.block();
-        FinancialStatementDTO financialStatementDTO = FinancialStatementDTO.builder()
-                .stockId(stockDTO.getStockID())
-                .year(request.getYear())
-                .quarter(request.getQuarter())
-                .content(financialStatement)
-                .build();
-        financialStatementService.save(financialStatementDTO);
-        return ResponseEntity.ok().body(financialStatement);
-
+        String financialStatementContent = "";
+        StockDTO stockDTO = stockService.findByStockName(request.getCorpName());
+        try {
+            FinancialStatementDTO financialStatementDTO = financialStatementService.findFinancialStatementByStockId(stockDTO.getStockID(), request.getYear(), request.getQuarter());
+            financialStatementContent = financialStatementDTO.getContent();
+        } catch (RuntimeException e) {
+            Mono<String> financialStatementResponse = dartService.getFinancialStatementFromDart(stockDTO, request.getYear(), request.getQuarter());
+            financialStatementContent = financialStatementResponse.block();
+            FinancialStatementDTO financialStatementDTO = FinancialStatementDTO.builder()
+                    .stockId(stockDTO.getStockID())
+                    .year(request.getYear())
+                    .quarter(request.getQuarter())
+                    .content(financialStatementContent)
+                    .build();
+            financialStatementService.save(financialStatementDTO);
+        }
+        return ResponseEntity.ok().body(financialStatementContent);
     }
 }
