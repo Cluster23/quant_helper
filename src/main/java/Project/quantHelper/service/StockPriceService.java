@@ -28,6 +28,9 @@ public class StockPriceService {
                 .openPrice(stockPriceDTO.getOpenPrice())
                 .closePrice(stockPriceDTO.getClosePrice())
                 .tradingVolume(stockPriceDTO.getTradingVolume())
+                .movingAverageLine5(stockPriceDTO.getMovingAverageLine5())
+                .movingAverageLine10(stockPriceDTO.getMovingAverageLine10())
+                .movingAverageLine20(stockPriceDTO.getMovingAverageLine20())
                 .build(); // stockPriceDTO로 stockPrice Entity 빌드
         stockPrice.changeStock(stock); // 빌드된 Entity에 stock(FK) 삽입
 
@@ -35,18 +38,28 @@ public class StockPriceService {
         return stockPrice.getId();
     }
 
-    public StockPriceDTO getStockPriceDTOByStockIdAndDate(Long stockId, LocalDate startDate){
-        StockPrice stockPrice = stockPriceRepository.findStockPriceByStockAndDate(stockRepository.findById(stockId).get(), startDate);
+    public boolean isStockPriceExistByStockIdAndDate(Long stockId, LocalDate date){
+        StockPrice stockPrice = stockPriceRepository.findStockPriceByStockAndDate(stockRepository.findById(stockId).get(), date);
+
+        if(stockPrice != null) return true;
+        else return false;
+    }
+
+    public StockPriceDTO getStockPriceDTOByStockIdAndDate(Long stockId, LocalDate date){
+        StockPrice stockPrice = stockPriceRepository.findStockPriceByStockAndDate(stockRepository.findById(stockId).get(), date);
 
         if(stockPrice != null) {
             StockPriceDTO stockPriceDTO = StockPriceDTO.builder()
                     .stockId(stockId)
-                    .date(startDate)
+                    .date(date)
                     .maxPriceDay(stockPrice.getMaxPriceDay())
                     .minPriceDay(stockPrice.getMinPriceDay())
                     .openPrice(stockPrice.getOpenPrice())
                     .closePrice(stockPrice.getClosePrice())
                     .tradingVolume(stockPrice.getTradingVolume())
+                    .movingAverageLine5(stockPrice.getMovingAverageLine5())
+                    .movingAverageLine10(stockPrice.getMovingAverageLine10())
+                    .movingAverageLine20(stockPrice.getMovingAverageLine20())
                     .build();
             return stockPriceDTO;
         } else {

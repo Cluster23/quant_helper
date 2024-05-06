@@ -96,4 +96,18 @@
     <changeSet id="rename_close_price_column" author="jujaewon">
         <renameColumn tableName="stock_price" oldColumnName="close-price" newColumnName="close_price"/>
     </changeSet>
+
+    <changeSet id="add_moving_average_columns" author="jujaewon">
+        <addColumn tableName="stock_price">
+            <column name="moving_average_line5" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="moving_average_line10" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="moving_average_line20" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
