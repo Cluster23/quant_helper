@@ -1,8 +1,8 @@
 spring:
   profiles:
-    active: dev
+    active: prod
   datasource:
-    url: jdbc:postgresql://localhost:5432/quant-helper
+    url: jdbc:postgresql://postgres:5432/quant-helper
     driverClassName: org.postgresql.Driver
     username: cluster23
     password: cluster23

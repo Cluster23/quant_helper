@@ -162,7 +162,6 @@ public class StockController {
 
         //5/4 업데이트 - 일자별 데이터 호출 시 이미 DB에 있는 경우, KIS에서 새로 불러오는 것이 아니라 DB에 있는 값을 리턴
 
-
         // 조회하려는 모든 날짜를 dates 리스트에 저장
         ArrayList<LocalDate> dates = new ArrayList<>();
 
