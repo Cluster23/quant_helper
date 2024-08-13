@@ -40,16 +40,14 @@ public class DartService {
     public Mono<String> getFinancialStatementFromDart(StockDTO stockDTO, int year, int quarter) {
         String[] reprtCode = {"11013", "11012", "11014", "11011"};
 
+        String fullUrl = baseUrl + "/api/fnlttSinglAcnt.json" +
+                "?crtfc_key=" + apiKey +
+                "&corp_code=" + stockDTO.getCorpCode() +
+                "&bsns_year=" + year +
+                "&reprt_code=" + reprtCode[quarter - 1];
+
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .scheme("https")
-                        .host(baseUrl)
-                        .path("/api/fnlttSinglAcnt.json")
-                        .queryParam("crtfc_key", apiKey)
-                        .queryParam("corp_code", stockDTO.getCorpCode())
-                        .queryParam("bsns_year", year)
-                        .queryParam("reprt_code", reprtCode[quarter - 1])
-                        .build())
+                .uri(fullUrl)
                 .retrieve()
                 .bodyToMono(String.class);
     }
