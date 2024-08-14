@@ -103,7 +103,6 @@ public class StockController {
         String corpCode = stockDTO.getCorpCode();
 
         int i = stockService.updateStock(stockName, stockCode, stockPriceIndex, price, theme, status, corpCode);
-
         return ResponseEntity.ok().body(i+"개의 row 업데이트");
     }
 

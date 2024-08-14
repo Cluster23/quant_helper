@@ -12,7 +12,6 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("https://quant-helper.online"))
                 .components(new Components())
                 .info(apiInfo());
     }
