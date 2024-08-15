@@ -9,8 +9,46 @@ def call_news(query):
     response = requests.get(url, params=params)
 
     if response.status_code == 200:
-        data = response.json()
-        print("Received data:", data)
-        return data
+        return response.json()
+    else:
+        print("Failed to fetch data. Status code:", response.status_code)
+
+def call_stock_price(stock_name, start_date, end_date):
+    url = base_url + "/stock/price"  # Spring 서버의 API 엔드포인트
+    params = {
+        'stock_name' : stock_name,
+        'start_date' : start_date,
+        'end_date' : end_date,
+    }
+    response = requests.post(url, params=params)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Failed to fetch data. Status code:", response.status_code)
+
+def call_stock_info(stock_name):
+    url = base_url + "/stock/"  # Spring 서버의 API 엔드포인트
+    params = {
+        'stock_name' : stock_name,
+    }
+    response = requests.post(url, params=params)
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Failed to fetch data. Status code:", response.status_code)
+
+def get_financial_statement(corp_name, year, quarter):
+    url = base_url + "/financial-statement/"  # Spring 서버의 API 엔드포인트
+    params = {
+        'corp_name' : corp_name,
+        'year' : year,
+        'quarter' : quarter,
+    }
+    response = requests.post(url, params=params)
+
+    if response.status_code == 200:
+        return response.json()
     else:
         print("Failed to fetch data. Status code:", response.status_code)
