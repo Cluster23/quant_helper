@@ -5,6 +5,12 @@ from autogen import config_list_from_json
 from autogen.agentchat.contrib.gpt_assistant_agent import GPTAssistantAgent
 from tools import getNews
 from tools import getNews_api_schema
+from tools import getStockPrice
+from tools import getStockPrice_api_schema
+from tools import getStockInfo
+from tools import getStockInfo_api_schema
+from tools import getFinancialStatement
+from tools import getFinancialStatement_api_schema
 from autogen import ConversableAgent
 from openai import OpenAI
 
@@ -82,6 +88,89 @@ def get_conclusion_agent(llm_config, my_assistants):
             llm_config=llm_config,
         )
     return conclusion_agent
+
+def get_stock_agent(llm_config, my_assistants):
+    found = False
+    for assistant in my_assistants:
+        if assistant.name == "stock_agent":
+            found = True
+            stock_agent = GPTAssistantAgent(
+                name=assistant.name,
+                llm_config=llm_config,
+                assistant_config={
+                    "assistant_id": assistant.id,
+                },
+                instructions=assistant.instructions,
+            )
+            stock_agent.register_function(
+                function_map={
+                    "getStockPrice": getStockPrice,
+                    "getStockInfo": getStockInfo,
+                }
+            )
+            return stock_agent
+
+    if not found:
+        # 새 GPTAssistantAgent 생성
+        stock_agent = GPTAssistantAgent(
+            name="stock_agent",
+            instructions="You are a financial assistant specialized in analyzing and providing detailed stock information. " +
+                         "Your task is to analyze stock-related queries by referencing key data points such as the current price, " +
+                         "52-week high and low, today's opening and closing prices, and moving averages for the past 5, 20, and 60 days. " +
+                         "When responding to queries, utilize the functions 'getStockPrice' and 'getStockInfo' to retrieve up-to-date stock data. " +
+                         "Use this data to provide logical and well-reasoned answers. " +
+                         "If a user inquires about the performance or outlook of a specific stock, base your response on the relevant data " +
+                         "and consider market trends, historical performance, and other relevant financial indicators. " +
+                         "Your goal is to deliver accurate, data-driven insights that help users make informed decisions regarding their stock investments.",
+            llm_config=llm_config,
+        )
+        stock_agent.register_function(
+            function_map={
+                "getStockPrice": getStockPrice,
+                "getStockInfo": getStockInfo,
+            }
+        )
+    return stock_agent
+
+def get_financial_statement_agent(llm_config, my_assistants):
+    found = False
+    for assistant in my_assistants:
+        if assistant.name == "financial_statement_agent":
+            found = True
+            financial_statement_agent = GPTAssistantAgent(
+                name=assistant.name,
+                llm_config=llm_config,
+                assistant_config={
+                    "assistant_id": assistant.id,
+                },
+                instructions=assistant.instructions,
+            )
+            financial_statement_agent.register_function(
+                function_map={
+                    "getFinancialStatement": getFinancialStatement,
+                }
+            )
+            return financial_statement_agent
+
+    if not found:
+        # 새 GPTAssistantAgent 생성
+        financial_statement_agent = GPTAssistantAgent(
+            name="financial_statement_agent",
+            instructions="You are a financial analyst assistant specialized in interpreting and explaining financial statements of corporations. " +
+                         "Your task is to analyze queries related to corporate financial health using key data points such as current assets, non-current assets, " +
+                         "total assets, current liabilities, non-current liabilities, total liabilities, and equity. " +
+                         "You should also consider the income statement data including revenue, operating profit, and net income. " +
+                         "When responding to queries, utilize the function 'getFinancialStatement' to retrieve the latest financial data and compare it with previous periods' data. " +
+                         "Use this data to provide insightful, data-driven analysis and help users understand the financial condition and performance of a company. " +
+                         "Ensure to present trends and significant changes between reporting periods to offer a clear picture of the company's financial trajectory.",
+            llm_config=llm_config,
+        )
+        financial_statement_agent.register_function(
+            function_map={
+                "getFinancialStatement": getFinancialStatement,
+            }
+        )
+    return financial_statement_agent
 
 def get_question_agent(llm_config):
     return ConversableAgent(
