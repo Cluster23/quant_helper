@@ -32,6 +32,7 @@ def get_news_agent(llm_config, my_assistants):
                         }
                     ]
                 },
+                overwrite_instructions=True,
                 instructions=assistant.instructions,
             )
             news_agent.register_function(
@@ -54,6 +55,7 @@ def get_news_agent(llm_config, my_assistants):
                     }
                 ]
             },
+            overwrite_instructions=True,
             instructions="You are an assistant which retrieves query and searches news with the query. Use function to retrieve news information. If you call getNews function, you can get a JSON object which includes the result of searching. Analyze news titles and figure out that status for stock is positive or negative."
         )
         news_agent.register_function(
@@ -74,6 +76,7 @@ def get_conclusion_agent(llm_config, my_assistants):
                 assistant_config={
                     "assistant_id": assistant.id,
                 },
+                overwrite_instructions=True,
                 instructions=assistant.instructions,
             )
             return conclusion_agent
@@ -84,8 +87,9 @@ def get_conclusion_agent(llm_config, my_assistants):
             name="conclusion_agent",
             instructions="You are a manager of Agents. " +
                          "You receive the question from user and make prompts to give answer. You should make prompt if you need any information from other agents to make answer. " +
-                         "There is only one agent now. The News Agent.",
+                         "There are three agents: news_agent, stock_agent, financial_statement_agent",
             llm_config=llm_config,
+            overwrite_instructions=True,
         )
     return conclusion_agent
 
@@ -99,7 +103,18 @@ def get_stock_agent(llm_config, my_assistants):
                 llm_config=llm_config,
                 assistant_config={
                     "assistant_id": assistant.id,
+                    "tools": [
+                        {
+                            "type": "function",
+                            "function": getStockPrice_api_schema,
+                        },
+                        {
+                            "type": "function",
+                            "function": getStockInfo_api_schema,
+                        }
+                    ]
                 },
+                overwrite_instructions=True,
                 instructions=assistant.instructions,
             )
             stock_agent.register_function(
@@ -123,6 +138,19 @@ def get_stock_agent(llm_config, my_assistants):
                          "and consider market trends, historical performance, and other relevant financial indicators. " +
                          "Your goal is to deliver accurate, data-driven insights that help users make informed decisions regarding their stock investments.",
             llm_config=llm_config,
+            assistant_config={
+                "tools": [
+                    {
+                        "type": "function",
+                        "function": getStockPrice_api_schema,
+                    },
+                    {
+                        "type": "function",
+                        "function": getStockInfo_api_schema,
+                    }
+                ]
+            },
+            overwrite_instructions=True,
         )
         stock_agent.register_function(
             function_map={
@@ -142,7 +170,14 @@ def get_financial_statement_agent(llm_config, my_assistants):
                 llm_config=llm_config,
                 assistant_config={
                     "assistant_id": assistant.id,
+                    "tools": [
+                        {
+                            "type": "function",
+                            "function": getFinancialStatement_api_schema
+                        }
+                    ]
                 },
+                overwrite_instructions=True,
                 instructions=assistant.instructions,
             )
             financial_statement_agent.register_function(
@@ -164,6 +199,15 @@ def get_financial_statement_agent(llm_config, my_assistants):
                          "Use this data to provide insightful, data-driven analysis and help users understand the financial condition and performance of a company. " +
                          "Ensure to present trends and significant changes between reporting periods to offer a clear picture of the company's financial trajectory.",
             llm_config=llm_config,
+            assistant_config={
+                "tools": [
+                    {
+                        "type": "function",
+                        "function": getFinancialStatement_api_schema,
+                    }
+                ]
+            },
+            overwrite_instructions=True,
         )
         financial_statement_agent.register_function(
             function_map={

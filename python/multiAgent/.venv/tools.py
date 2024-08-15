@@ -48,7 +48,7 @@ getNews_api_schema = {
         "properties": {
             "query": {
                 "type": "string",
-                "description": "The query to search for news",
+                "description": "The query to search for news (Korean)",
             },
         },
         "required": ["query"],
@@ -63,7 +63,7 @@ getStockPrice_api_schema = {
         "properties": {
             "stock_name": {
                 "type": "string",
-                "description": "The name of the stock for which the price data is requested.",
+                "description": "The name of the stock for which the price data is requested. (Korean)",
             },
             "start_date": {
                 "type": "string",
@@ -86,7 +86,7 @@ getStockInfo_api_schema = {
         "properties": {
             "stock_name": {
                 "type": "string",
-                "description": "The name of the stock for which information is requested.",
+                "description": "The name of the stock for which information is requested. (Korean)",
             },
         },
         "required": ["stock_name"],
@@ -101,7 +101,7 @@ getFinancialStatement_api_schema = {
         "properties": {
             "corp_name": {
                 "type": "string",
-                "description": "The name of the corporation for which the financial statement is requested.",
+                "description": "The name of the corporation for which the financial statement is requested. (Korean)",
             },
             "year": {
                 "type": "integer",
