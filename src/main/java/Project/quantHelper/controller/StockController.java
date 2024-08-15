@@ -73,7 +73,7 @@ public class StockController {
                     )
             }
     )
-    public ResponseEntity<String> stock(@RequestBody GetStockRequest request) throws JsonProcessingException {
+    public ResponseEntity<?> stock(@RequestBody GetStockRequest request) throws JsonProcessingException {
         StockDTO stockDTO = stockService.getStockDTOByStockName(request.getStockName());
         String stockCode = stockDTO.getStockCode();
         if (stockCode.length() < 6){
@@ -103,7 +103,9 @@ public class StockController {
         String corpCode = stockDTO.getCorpCode();
 
         int i = stockService.updateStock(stockName, stockCode, stockPriceIndex, price, theme, status, corpCode);
-        return ResponseEntity.ok().body(i+"개의 row 업데이트");
+        log.info(i+"개의 row 업데이트");
+
+        return ResponseEntity.ok().body(stockService.getStockDTOByStockName(stockName));
     }
 
     /**

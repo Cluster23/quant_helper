@@ -62,6 +62,7 @@ public class NewsController {
             }
     )
     public ResponseEntity<?> news(@RequestParam(name = "query") String query) throws JsonProcessingException {
+        log.info("news controller executed");
         return ResponseEntity.ok().body(newsService.getNews(query));
     }
 }
