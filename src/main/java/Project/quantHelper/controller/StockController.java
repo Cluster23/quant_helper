@@ -74,6 +74,7 @@ public class StockController {
             }
     )
     public ResponseEntity<?> stock(@RequestBody GetStockRequest request) throws JsonProcessingException {
+        log.info("stock executed");
         StockDTO stockDTO = stockService.getStockDTOByStockName(request.getStockName());
         String stockCode = stockDTO.getStockCode();
         if (stockCode.length() < 6){
@@ -142,6 +143,7 @@ public class StockController {
             }
     )
     public ResponseEntity<ArrayList<StockPriceDTO>> stockPrice(@RequestBody GetStockPriceRequest request) throws JsonProcessingException {
+        log.info("stock price executed");
         ArrayList<StockPriceDTO> stockPriceDTOs = new ArrayList<>(); // 응답 메시지에 넣을 리스트
         ArrayList<Long> prevStockPriceList = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -179,18 +181,22 @@ public class StockController {
         }
 
         // 조회하려는 데이터 중에, DB에 없는 날짜가 하나라도 포함되어 있다면? -> Kis 서버에 새로 요첨
+        // 이때, 중복으로 저장되는 경우가 발생 - 8/19
         // 조회하려는 데이터가 모두 DB에 있다면? -> DB에서 가져와서 stockPriceDTOs에 넣어줌
-        boolean findFromDB = true;
+        boolean AllExistInDB = true;
 
         for(LocalDate date : dates){
             if(!stockPriceService.isStockPriceExistByStockIdAndDate(stockId, date)){
                 // DB에 존재하지 않는다면
-                findFromDB = false;
+                // 휴장일 데이터는 존재하지 않으므로 빼줘야 함.
+                // ToDo 휴장일 데이터셋 만들기
+                AllExistInDB = false;
+                log.info("존재하지 않는 날짜: {}",date);
                 break;
             }
         }
 
-        if(findFromDB){
+        if(AllExistInDB){
             // 조회하려는 데이터가 모두 DB에 존재
             for(LocalDate date : dates) {
                 StockPriceDTO stockPriceDtoDB = stockPriceService.getStockPriceDTOByStockIdAndDate(stockId, date);
@@ -199,7 +205,6 @@ public class StockController {
             }
         } else {
             // 조회하려는 데이터 중, DB에 존재하지 않는 날짜가 하나라도 포함되어 있다면
-
             // startDate ~ endDate의 주식 정보 조회
             String stockPriceResponse = kisService.getStockPriceByCodeAndDate(stockCode, request.getStartDate(), request.getEndDate()).block();
 
@@ -229,9 +234,10 @@ public class StockController {
                 Long movingAverageLine10 = calculateMovingAverage(prevStockPriceList, 10);
                 Long movingAverageLine20 = calculateMovingAverage(prevStockPriceList, 20);
 
+                LocalDate date = LocalDate.parse(stockPriceData.get("stck_bsop_date"), formatter);
                 StockPriceDTO stockPriceDTO = StockPriceDTO.builder()
-                        .date(LocalDate.parse(stockPriceData.get("stck_bsop_date"), formatter))
-                        .stockId(stockService.findStockIdByStockCode(stockCode))
+                        .date(date)
+                        .stockId(stockId)
                         .maxPriceDay(Long.valueOf(stockPriceData.get("stck_hgpr")))
                         .minPriceDay(Long.valueOf(stockPriceData.get("stck_lwpr")))
                         .openPrice(Long.valueOf(stockPriceData.get("stck_oprc")))
@@ -242,8 +248,15 @@ public class StockController {
                         .movingAverageLine20(movingAverageLine20)
                         .build();
 
-                stockPriceService.saveStockPrice(stockPriceDTO);
-                stockPriceDTOs.add(stockPriceDTO);
+                // 이미 데이터가 존재한다면 패스해야함
+                if(!stockPriceService.isStockPriceExistByStockIdAndDate(stockId, date)){
+                    stockPriceService.saveStockPrice(stockPriceDTO);
+                    stockPriceDTOs.add(stockPriceDTO);
+                } else {
+                    // 이미 데이터가 존재하는 경우
+                    // 응답 메시지에는 표시해야하기 때문에 stockPriceDTOs에는 넣어주어야 함.
+                    stockPriceDTOs.add(stockPriceService.getStockPriceDTOByStockIdAndDate(stockId, date));
+                }
             }
         }
         return ResponseEntity.ok().body(stockPriceDTOs);
