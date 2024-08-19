@@ -39,7 +39,7 @@ def call_stock_info(stock_name):
     else:
         print("Failed to fetch data. Status code:", response.status_code)
 
-def get_financial_statement(corp_name, year, quarter):
+def call_financial_statement(corp_name, year, quarter):
     url = base_url + "/financial-statement/"  # Spring 서버의 API 엔드포인트
     data = {
         'corpName': corp_name,

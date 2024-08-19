@@ -2,7 +2,7 @@ from autogen.function_utils import get_function_schema
 from spring_api_functions import call_news
 from spring_api_functions import call_stock_price
 from spring_api_functions import call_stock_info
-from spring_api_functions import get_financial_statement
+from spring_api_functions import call_financial_statement
 
 
 
