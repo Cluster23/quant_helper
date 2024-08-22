@@ -7,7 +7,10 @@ import Project.quantHelper.dto.response.SuccessResponse;
 import Project.quantHelper.service.NewsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -63,6 +66,20 @@ public class NewsController {
     )
     public ResponseEntity<?> news(@RequestParam(name = "query") String query) throws JsonProcessingException {
         log.info("news controller executed");
-        return ResponseEntity.ok().body(newsService.getNews(query));
+
+        String news = newsService.getNews(query);
+
+        JsonElement jsonElement = JsonParser.parseString(news);
+        JsonArray items = jsonElement.getAsJsonObject().get("items").getAsJsonArray();
+        JsonArray newsJson = new JsonArray();
+
+        for (JsonElement element : items) {
+            JsonObject temp = new JsonObject();
+            temp.add("title", element.getAsJsonObject().get("title"));
+            temp.add("link", element.getAsJsonObject().get("link"));
+            newsJson.add(temp);
+        }
+
+        return ResponseEntity.ok().body(newsJson.toString());
     }
 }

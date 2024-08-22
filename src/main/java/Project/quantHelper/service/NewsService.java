@@ -33,7 +33,7 @@ public class NewsService {
     }
 
     public String getNews(String query){
-        String fullUrl = baseUrl + "?query=" + query + "&sort=date";
+        String fullUrl = baseUrl + "?query=" + query + "&display=100&sort=sim";
 
         return webClient.get()
                 .uri(fullUrl)
