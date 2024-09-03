@@ -8,7 +8,6 @@ from agents import (
     get_news_agent,
     get_stock_agent,
     get_financial_statement_agent,
-    get_question_agent,
     get_user_proxy_agent,
     get_prompt_agent,
 )
@@ -43,9 +42,6 @@ def main():
     user_proxy_agent = get_user_proxy_agent()
 
     prompt_agent = get_prompt_agent(llm_config, rule)
-
-    # question_agent 생성
-    question_agent = get_question_agent(llm_config, rule)
 
     # news_agent 가져오기 또는 생성
     news_agent = get_news_agent(llm_config, my_assistants)

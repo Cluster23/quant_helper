@@ -36,10 +36,7 @@ def getFinancialStatement(corp_name, year, quarter) -> dict:
     return {
         "data": response,
     }
-
-def chat_about_news(prompt: Annotated[str, "prompt used for searching news"]) -> str:
     
-
 
 getNews_api_schema = {
     "name" : "getNews",

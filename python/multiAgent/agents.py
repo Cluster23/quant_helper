@@ -254,16 +254,16 @@ def get_prompt_agent(llm_config, rule):
                        " 답변을 출력할 때는, 주식 명과 프롬프트만 출력하세요.",
     )
 
-def get_analysis_agent(llm_config, rule):
-    analysis_agent = ConversableAgent(
-        name="analysis_agent",
-        llm_config=llm_config,
-        human_input_mode="NEVER",
-        system_message="당신은 프롬프트를 받아서 도구를 실행한 뒤, 결과를 수집해서 논리적으로 정리하는 AI입니다." +
-                       " 당신이 사용할 수 있는 도구는 3가지가 있습니다."
-                       " 1. 뉴스를 검색하는 도구 - 뉴스와 관련된 프롬프트가 들어오면, 해당 프롬프트를 인수로 넘겨서 사용합니다."
-                       " 2. 주식의 가격, 정보를 분석하는 도구 - 주식의 가격, 또는 정보와 관련된 프롬프트가 들어오면, 해당 프롬프트를 인수로 넘겨서 사용합니다." +
-                       " 3. 재무제표 관련 정보를 얻는 도구 - 재무제표와 관련된 정보(PER, ROE, 주식의 발행 수 등)와 관련된 프롬프트가 들어오면, 해당 프롬프트를 인수로 넘겨서 사용합니다." +
-                       " 각각의 도구를 실행해서 얻은 결과를 하나로 종합하세요",
-    )
-    analysis_agent.register_for_llm(chat_about_news)
+# def get_analysis_agent(llm_config, rule):
+#     analysis_agent = ConversableAgent(
+#         name="analysis_agent",
+#         llm_config=llm_config,
+#         human_input_mode="NEVER",
+#         system_message="당신은 프롬프트를 받아서 도구를 실행한 뒤, 결과를 수집해서 논리적으로 정리하는 AI입니다." +
+#                        " 당신이 사용할 수 있는 도구는 3가지가 있습니다."
+#                        " 1. 뉴스를 검색하는 도구 - 뉴스와 관련된 프롬프트가 들어오면, 해당 프롬프트를 인수로 넘겨서 사용합니다."
+#                        " 2. 주식의 가격, 정보를 분석하는 도구 - 주식의 가격, 또는 정보와 관련된 프롬프트가 들어오면, 해당 프롬프트를 인수로 넘겨서 사용합니다." +
+#                        " 3. 재무제표 관련 정보를 얻는 도구 - 재무제표와 관련된 정보(PER, ROE, 주식의 발행 수 등)와 관련된 프롬프트가 들어오면, 해당 프롬프트를 인수로 넘겨서 사용합니다." +
+#                        " 각각의 도구를 실행해서 얻은 결과를 하나로 종합하세요",
+#     )
+#     analysis_agent.register_for_llm(chat_about_news)
