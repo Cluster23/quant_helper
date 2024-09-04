@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 !**/src/main/**/applicaion-dev.yml
 !**/src/main/**/applicaion-prod.yml
+multi_agent_env/
 
 ### STS ###
 .apt_generated

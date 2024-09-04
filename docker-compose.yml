@@ -13,22 +13,21 @@ services:
     restart: unless-stopped
     networks:
       - backend
-
-#  api:
-#    build:
-#      context: .
-#      dockerfile: ./docker/api/Dockerfile
-#    container_name: api
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/quant-helper
-#      SPRING_DATASOURCE_USERNAME: cluster23
-#      SPRING_DATASOURCE_PASSWORD: cluster23
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - postgres
-#    networks:
-#      - backend
+  # api:
+  #  build:
+  #    context: .
+  #    dockerfile: ./docker/api/Dockerfile
+  #  container_name: api
+  #  environment:
+  #    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/quant-helper
+  #    SPRING_DATASOURCE_USERNAME: cluster23
+  #    SPRING_DATASOURCE_PASSWORD: cluster23
+  #  ports:
+  #    - "8080:8080"
+  #  depends_on:
+  #    - postgres
+  #  networks:
+  #    - backend
 
 networks:
   backend:
