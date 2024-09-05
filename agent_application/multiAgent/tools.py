@@ -5,27 +5,27 @@ from spring_api_functions import call_stock_info
 from spring_api_functions import call_financial_statement
 
 
-
-
 def getNews(query: str) -> dict:
-    '''
+    """
     retrieves query and search news with query
     param:
     query (string) : The query to search for news
     return:
     Union[str, dict]: A dictionary with news details
-    '''
+    """
     response = call_news(query)
     return {
         "query": query,
         "news": response,
     }
 
+
 def getStockPrice(stock_name, start_date, end_date) -> dict:
     response = call_stock_price(stock_name, start_date, end_date)
     return {
         "data": response,
     }
+
 
 def getStockInfo(stock_name) -> dict:
     response = call_stock_info(stock_name)
@@ -42,7 +42,7 @@ def getFinancialStatement(corp_name, year, quarter) -> dict:
 
 
 getNews_api_schema = {
-    "name" : "getNews",
+    "name": "getNews",
     "parameters": {
         "type": "object",
         "properties": {
@@ -116,6 +116,3 @@ getFinancialStatement_api_schema = {
     },
     "description": "This is an API endpoint allowing users to retrieve the financial statement of a specific corporation for a given year and quarter.",
 }
-
-
-

@@ -1,5 +1,6 @@
 import dotenv
 import os
+import autogen
 from autogen import GroupChatManager
 from autogen import GroupChat
 from openai import OpenAI
@@ -19,10 +20,15 @@ client = OpenAI()
 OpenAI.api_key = os.environ.get("OPENAI_API_KEY")
 rule = os.environ.get("RULE")
 
-llm_config = {"config_list": [{"model": "gpt-4o-mini", "api_key": os.environ.get("OPENAI_API_KEY")}]}
+llm_config = {
+    "config_list": [
+        {"model": "gpt-4o-mini", "api_key": os.environ.get("OPENAI_API_KEY")}
+    ]
+}
 
 # 이미 생성되어있는 Assistants
 my_assistants = client.beta.assistants.list(order="desc", limit="20")
+
 
 def main():
     # 사용자로부터 질문 입력 받기
@@ -44,8 +50,6 @@ def main():
     # financial_statement_agent 가져오기 또는 생성
     financial_statement_agent = get_financial_statement_agent(llm_config, my_assistants)
 
-
-
     group_chat = autogen.GroupChat(
         agents=[news_agent, stock_agent, financial_statement_agent, prompt_agent],
         messages=[],
@@ -57,7 +61,11 @@ def main():
         name="manager_agent",
         groupchat=group_chat,
         system_message="당신은 주식 관련 질문에 응답하기 위해서 다른 에이전트와 협업하는 AI입니다.",
-        llm_config={"config_list": [{"model": "gpt-4o-mini", "api_key": os.environ["OPENAI_API_KEY"]}]}
+        llm_config={
+            "config_list": [
+                {"model": "gpt-4o-mini", "api_key": os.environ["OPENAI_API_KEY"]}
+            ]
+        },
     )
 
     # prompts = user_proxy_agent.initiate_chat(prompt_agent,
@@ -66,11 +74,14 @@ def main():
     #                                          summary_method="last_msg",
     #                                         )
 
-    result = user_proxy_agent.initiate_chat(manager_agent,
-                                          message=question,
-                                          summary_method="reflection_with_llm",
-                                          max_turns=1)
+    result = user_proxy_agent.initiate_chat(
+        manager_agent,
+        message=question,
+        summary_method="reflection_with_llm",
+        max_turns=1,
+    )
     print("result:", result)
+
 
 if __name__ == "__main__":
     main()
