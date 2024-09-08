@@ -30,6 +30,16 @@ llm_config = {
 my_assistants = client.beta.assistants.list(order="desc", limit="20")
 
 
+"""
+구조: User-Proxy Agent와 Group Chat Manager의 대화
+    group에 속해있는 Agent: news, stock, fs, conclusion, prompt
+    
+    
+그룹챗 로직: turn의 시작마다 프롬프트 agent를 호출한다.
+    프롬프트를 하나씩 생성해서 다른 agent에게 날린다.
+    최종적으로 conclusion agent를 호출해서 결과를 반환한다.
+"""
+
 def main():
     # 사용자로부터 질문 입력 받기
     question = input("질문이 무엇인가요? : ")
