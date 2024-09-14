@@ -103,7 +103,7 @@ def get_conclusion_agent(llm_config, my_assistants):
         # 새 GPTAssistantAgent 생성
         conclusion_agent = GPTAssistantAgent(
             name="conclusion_agent",
-            instructions="지금까지 그룹에서 한 대화 내용을 정리해서 ",
+            # instructions="지금까지 그룹에서 한 대화 내용을 정리하고 이 Agent가 호출되면 ",
             llm_config=llm_config,
             overwrite_instructions=True,
             description="The agent that summarize information from other agents at the last sequence",
@@ -281,28 +281,49 @@ def get_question_agent(llm_config, rule):
 #     )
 
 
-# Version 2
+# # Version 2
+# def get_prompt_agent(llm_config, rule):
+#     return ConversableAgent(
+#         name="prompt_agent",
+#         llm_config=llm_config,
+#         human_input_mode="NEVER",
+#         system_message="당신은 프롬프트를 생성하는 AI입니다. 사용자는 주식과 관련된 질문을 할 것 입니다. 사용자의 질문에 논리적으로 대답하기 위해, 다른 AI들에게 보낼 프롬프트를 생성 해야합니다."
+#         + " 현재 날짜와 시간은 "
+#         + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#         + " 입니다."
+#         + " 당신은 한 번에 한 개씩만 프롬프트를 생성할 수 있습니다."
+#         + " 당신이 프롬프트를 보낼 수 있는 AI는 3종류가 존재합니다. "
+#         + " 1. 주식 가격 AI(주식의 현재 가격, 이동평균선, 주가 추세 등을 알고있습니다.)"
+#         + " 2. 뉴스 AI(주식과 관련된 뉴스 정보를 갖고 있습니다.)"
+#         + " 3. 재무제표 AI(회사의 재무제표를 가지고 있습니다.)"
+#         + " 사용자가 당신에게 주가 예측이나 주식의 성장성 등을 물어본다면, 해당 사용자가 정해놓은 투자의 규칙에 맞게 프롬프트를 생성하세요."
+#         + rule
+#         + " 예를 들어, 사용자는 다음과 같이 질문할 수 있습니다: 삼성전자의 현재 주가가 고평가 되었다고 생각해?"
+#         + " 당신은 사용자의 투자 규칙에 맞춰서 AI들에게 보낼 프롬프트를 생성합니다."
+#         + " 주식 명칭: 삼성전자"
+#         + " 프롬프트: 삼성전자와 관련된 최신 뉴스를 검색하고 긍정적인 부분과 부정적인 평가를 분석해주세요"
+#         + " 그 다음, 당신의 차례가 돌아오면 다음 프롬프트를 생성합니다."
+#         + " 프롬프트: 삼성전자의 주가가 20일 이동평균선보다 위에 있는지 분석해주세요"
+#         + " 답변을 출력할 때는, 주식 명과 프롬프트만 출력하세요.",
+#     )
+
+
+# Version 3
 def get_prompt_agent(llm_config, rule):
     return ConversableAgent(
         name="prompt_agent",
         llm_config=llm_config,
         human_input_mode="NEVER",
-        system_message="당신은 프롬프트를 생성하는 AI입니다. 사용자는 주식과 관련된 질문을 할 것 입니다. 사용자의 질문에 논리적으로 대답하기 위해, 다른 AI들에게 보낼 프롬프트를 생성 해야합니다."
+        system_message="당신은 프롬프트를 생성하는 AI입니다. 사용자는 주식과 관련된 질문을 할 것 입니다. 사용자의 질문에 논리적으로 대답하기 위해, 추가적으로 알아야 할 내용에 대해서 agent들에게 질문할 프롬프트를 생성 해야합니다.\n"
         + " 현재 날짜와 시간은 "
         + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         + " 입니다."
         + " 당신은 한 번에 한 개씩만 프롬프트를 생성할 수 있습니다."
-        + " 당신이 프롬프트를 보낼 수 있는 AI는 3종류가 존재합니다. "
-        + " 1. 주식 가격 AI(주식의 현재 가격, 이동평균선, 주가 추세 등을 알고있습니다.)"
-        + " 2. 뉴스 AI(주식과 관련된 뉴스 정보를 갖고 있습니다.)"
-        + " 3. 재무제표 AI(회사의 재무제표를 가지고 있습니다.)"
-        + " 사용자가 당신에게 주가 예측이나 주식의 성장성 등을 물어본다면, 해당 사용자가 정해놓은 투자의 규칙에 맞게 프롬프트를 생성하세요."
-        + rule
-        + " 예를 들어, 사용자는 다음과 같이 질문할 수 있습니다: 삼성전자의 현재 주가가 고평가 되었다고 생각해?"
-        + " 당신은 사용자의 투자 규칙에 맞춰서 AI들에게 보낼 프롬프트를 생성합니다."
-        + " 주식 명칭: 삼성전자"
-        + " 프롬프트: 삼성전자와 관련된 최신 뉴스를 검색하고 긍정적인 부분과 부정적인 평가를 분석해주세요"
-        + " 그 다음, 당신의 차례가 돌아오면 다음 프롬프트를 생성합니다."
-        " 프롬프트: 삼성전자의 주가가 20일 이동평균선보다 위에 있는지 분석해주세요"
-        + " 답변을 출력할 때는, 주식 명과 프롬프트만 출력하세요.",
+        + " 당신이 프롬프트를 보낼 수 있는 agent는 3종류가 존재합니다. "
+        + " 1. stock agent(주식의 현재 가격, 이동평균선, 주가 추세 등을 알고있습니다.)\n"
+        + " 2. news agent(주식과 관련된 뉴스 정보를 갖고 있습니다.)\n"
+        + " 3. financial statement agent(회사의 재무제표를 가지고 있습니다.)\n"
+        + "답변으로 오직 프롬프트만을 생성해야합니다\n"
+        + "예시: 주식과 관련된 최신 뉴스를 검색하고 긍정적인 부분과 부정적인 평가를 분석해주세요\n"
+        + "프롬프트: ",
     )
