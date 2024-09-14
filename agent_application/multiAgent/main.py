@@ -46,7 +46,7 @@ def main():
 
     user_proxy_agent = get_user_proxy_agent()
 
-    prompt_agent = get_prompt_agent(llm_config, rule)
+    prompt_agent = get_prompt_agent(llm_config, rule, question)
 
     # question_agent 생성
     # question_agent = get_question_agent(llm_config, rule)
@@ -66,6 +66,7 @@ def main():
     #     device_map="cpu",
     # )
 
+    # # 중간 요약
     # select_speaker_transforms = transform_messages.TransformMessages(
     #     transforms=[
     #         transforms.MessageHistoryLimiter(max_messages=10),
@@ -93,7 +94,7 @@ def main():
         prompt_agent: [news_agent, stock_agent, financial_statement_agent],
     }
     group_chat = GroupChat(
-        agents=[news_agent, stock_agent, financial_statement_agent, prompt_agent],
+        agents=[prompt_agent, news_agent, stock_agent, financial_statement_agent],
         messages=[],
         send_introductions=True,
         allowed_or_disallowed_speaker_transitions=speaker_transitions_dict,
@@ -104,7 +105,7 @@ def main():
     manager_agent = GroupChatManager(
         name="manager_agent",
         groupchat=group_chat,
-        # is_termination_msg=is_termination_msg,
+        is_termination_msg=is_termination_msg,
         system_message="당신은 주식 관련 질문에 응답하기 위해서 다른 에이전트와 협업하는 AI입니다.",
         llm_config={
             "config_list": [
@@ -121,7 +122,7 @@ def main():
 
     result = user_proxy_agent.initiate_chat(
         manager_agent,
-        message=question,
+        message=question + " prompt agent에게 먼저 질문을 해주세요.",
         summary_method="reflection_with_llm",
         max_turns=1,
     )

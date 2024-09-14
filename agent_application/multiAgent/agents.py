@@ -72,7 +72,8 @@ def get_news_agent(llm_config, my_assistants):
             + "뉴스 제목을 분석하여 주식의 상태가 긍정적인지 부정적인지 파악하세요. "
             + "분석을 마친 후에, 추가적으로 필요한 정보가 있다면 알려주세요. 추가 정보가 필요하지 않다면 응답에 포함시키지 않아도 됩니다. "
             + "예를 들어, '삼성전자'에 대한 검색 결과에 '삼성전자, SK 하이닉스와의 주가 경쟁중'이라는 뉴스가 포함되어 있으면, SK 하이닉스에 대한 추가 검색이 필요할 수 있습니다. "
-            + "결과 출력 시, 분석 후에는 '추가적으로 필요한 정보: ' 형식으로 출력해 주세요. 모든 과정은 반드시 한국어로 진행되어야 합니다.",
+            + "결과 출력 시, 분석 후에는 추가적으로 필요한 정보를 출력해 주세요 없다면 'TERMINATE'를 출력해야합니다."
+            + "모든 과정은 반드시 한국어로 진행되어야 합니다.",
         )
         news_agent.register_function(
             function_map={
@@ -150,8 +151,9 @@ def get_stock_agent(llm_config, my_assistants):
             instructions="당신은 주식 정보를 분석하고 제공하는 데 전문화된 금융 도우미입니다. "
             + " 당신의 업무는 주식의 현재 가격, 52주 최고 및 최저가, 오늘의 시가 및 종가, 지난 5일, 20일, 60일 간의 이동 평균 등의 주요 데이터를 토대로 질문에 대답하는 것입니다. "
             + " 주가 정보가 필요하다면 'getStockPrice' 및 'getStockInfo' 함수를 사용하여 최신 주식 데이터를 가져오세요. "
-            + ""
-            + "이 데이터를 활용하여 논리적이고 잘 정리된 답변을 제공하세요. ",
+            + "이 데이터를 활용하여 논리적이고 잘 정리된 답변을 제공하세요. "
+            + "결과 출력 시, 분석 후에는 추가적으로 필요한 정보를 출력해 주세요 없다면 'TERMINATE'를 출력해야합니다."
+            + "모든 과정은 반드시 한국어로 진행되어야 합니다.",
             llm_config=llm_config,
             assistant_config={
                 "tools": [
@@ -209,10 +211,11 @@ def get_financial_statement_agent(llm_config, my_assistants):
             name="financial_statement_agent",
             instructions="당신은 기업의 재무제표를 해석하고 설명하는 데 전문화된 금융 분석 도우미입니다. "
             + " 당신의 업무는 현재 자산, 비유동 자산, 총 자산, 유동 부채, 비유동 부채, 총 부채, 자본 등 주요 데이터를 사용하여 질문에 논리적으로 대답하는 것입니다. "
-            + " 'getFinancialStatement' 함수를 사용하여 최신 재무 데이터를 가져오고 이를 이전 기간의 데이터와 비교하세요. "
+            + " 'getFinancialStatement' 함수를 사용하여 최신 재무 데이터를 가져오고 분석해주세요. "
             + " 이 데이터를 활용하여 통찰력 있는 데이터 기반 분석을 제공하고 사용자가 회사의 재무 상태와 성과를 이해하도록 도와주세요. "
             + " 보고 기간 간의 추세와 주요 변화를 명확히 제시하여 회사의 재무적 경향을 분명히 보여주세요."
-            + " 만약, 당신이 가지고 있지 않은 정보를 요구 한다면, 어떤 정보가 추가로 필요한지 명확하게 알려주세요",
+            + "결과 출력 시, 분석 후에는 추가적으로 필요한 정보를 출력해 주세요 없다면 'TERMINATE'를 출력해야합니다."
+            + "모든 과정은 반드시 한국어로 진행되어야 합니다.",
             llm_config=llm_config,
             assistant_config={
                 "tools": [
@@ -309,12 +312,12 @@ def get_question_agent(llm_config, rule):
 
 
 # Version 3
-def get_prompt_agent(llm_config, rule):
+def get_prompt_agent(llm_config, rule, question):
     return ConversableAgent(
         name="prompt_agent",
         llm_config=llm_config,
         human_input_mode="NEVER",
-        system_message="당신은 프롬프트를 생성하는 AI입니다. 사용자는 주식과 관련된 질문을 할 것 입니다. 사용자의 질문에 논리적으로 대답하기 위해, 추가적으로 알아야 할 내용에 대해서 agent들에게 질문할 프롬프트를 생성 해야합니다.\n"
+        system_message=f"당신은 프롬프트를 생성하는 AI입니다. '{question}'에 대해서 논리적으로 대답하기 위해 추가적으로 알아야 할 내용에 대해서 특정한 agent에게 질문할 프롬프트를 생성 해야합니다.\n"
         + " 현재 날짜와 시간은 "
         + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         + " 입니다."
@@ -324,6 +327,6 @@ def get_prompt_agent(llm_config, rule):
         + " 2. news agent(주식과 관련된 뉴스 정보를 갖고 있습니다.)\n"
         + " 3. financial statement agent(회사의 재무제표를 가지고 있습니다.)\n"
         + "답변으로 오직 프롬프트만을 생성해야합니다\n"
-        + "예시: 주식과 관련된 최신 뉴스를 검색하고 긍정적인 부분과 부정적인 평가를 분석해주세요\n"
+        + "예시) 프롬프트: news agent, 주식과 관련된 최신 뉴스를 검색하고 긍정적인 부분과 부정적인 평가를 분석해주세요\n"
         + "프롬프트: ",
     )
