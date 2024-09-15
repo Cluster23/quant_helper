@@ -76,6 +76,7 @@ public class FinancialStatementController {
     public ResponseEntity<String> financialStatement(
             @RequestBody GetFinancialStatementRequest request
     ) {
+        System.out.println("A");
         if (request.getQuarter() <= 0){
             return ResponseEntity.badRequest().body("quater should be upper zero");
         }
@@ -85,7 +86,7 @@ public class FinancialStatementController {
         StockDTO stockDTO = stockService.getStockDTOByStockName(request.getCorpName());
         try {
             FinancialStatementDTO financialStatementDTO = financialStatementService.findFinancialStatementByStockId(stockDTO.getStockID(), request.getYear(), request.getQuarter());
-            majorContent = financialStatementDTO.getContent();
+            content = financialStatementDTO.getContent();
         } catch (RuntimeException e) {
             // Getting major content from Dart
             majorContent = dartService.getFinancialStatementFromDart(stockDTO, request.getYear(), request.getQuarter()).block();
@@ -140,7 +141,7 @@ public class FinancialStatementController {
             }
 
             content = mergedContent.toString();
-
+            System.out.println(content);
             // Save merged content
             FinancialStatementDTO financialStatementDTO = FinancialStatementDTO.builder()
                     .stockId(stockDTO.getStockID())

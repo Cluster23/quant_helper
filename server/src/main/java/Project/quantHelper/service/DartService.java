@@ -39,13 +39,11 @@ public class DartService {
      */
     public Mono<String> getFinancialStatementFromDart(StockDTO stockDTO, int year, int quarter) {
         String[] reprtCode = {"11013", "11012", "11014", "11011"};
-
         String fullUrl = baseUrl + "/api/fnlttSinglAcnt.json" +
                 "?crtfc_key=" + apiKey +
                 "&corp_code=" + stockDTO.getCorpCode() +
                 "&bsns_year=" + year +
                 "&reprt_code=" + reprtCode[quarter - 1];
-
         return webClient.get()
                 .uri(fullUrl)
                 .retrieve()
