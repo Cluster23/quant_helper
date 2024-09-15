@@ -10,8 +10,11 @@ from agents import (
     get_financial_statement_agent,
     get_user_proxy_agent,
     get_prompt_agent,
+    get_conclusion_agent,
 )
-
+from distribution_agent import (
+    get_distribution_agent,
+)
 
 dotenv.load_dotenv()
 client = OpenAI()
@@ -27,19 +30,15 @@ my_assistants = client.beta.assistants.list(order="desc", limit="20")
 
 """
     version2 
-    : user-proxy,  group chat 만을 사용하는 형태
-    group chat에는 총 5개 agent가 존재
-    1. 정보
-    2.
-    3.
-    4.
-    5.
+구조: 프롬프트를 생성하는 prompt agent를 group chat 외부에 두는 구조
 """
 def main():
     # 사용자로부터 질문 입력 받기
     question = input("질문이 무엇인가요? : ")
 
     user_proxy_agent = get_user_proxy_agent()
+
+    distribution_agent = get_distribution_agent(llm_config)
 
     prompt_agent = get_prompt_agent(llm_config, rule)
 
@@ -52,10 +51,10 @@ def main():
     # financial_statement_agent 가져오기 또는 생성
     financial_statement_agent = get_financial_statement_agent(llm_config, my_assistants)
 
-
+    conclusion_agent = get_conclusion_agent(llm_config, my_assistants)
 
     group_chat = autogen.GroupChat(
-        agents=[news_agent, stock_agent, financial_statement_agent, prompt_agent],
+        agents=[distribution_agent, conclusion_agent],
         messages=[],
         send_introductions=True,
         max_round=8,
@@ -64,15 +63,16 @@ def main():
     manager_agent = GroupChatManager(
         name="manager_agent",
         groupchat=group_chat,
-        system_message="당신은 주식 관련 질문에 응답하기 위해서 다른 에이전트와 협업하는 AI입니다.",
+        system_message="당신은 주식 관련 질문에 응답하기 위해서 다른 에이전트와 협업하는 AI입니다." +
+                       "주식 관련 질문에 응답하기 위해서는 요청 받은 프롬프트를 distribution_agent에게 보낸 뒤에 conclusion_agent를 호출해야 합니다.",
         llm_config={"config_list": [{"model": "gpt-4o-mini", "api_key": os.environ["OPENAI_API_KEY"]}]}
     )
 
-    # prompts = user_proxy_agent.initiate_chat(prompt_agent,
-    #                                          messages=question,
-    #                                          max_turns=1,
-    #                                          summary_method="last_msg",
-    #                                         )
+    prompts = user_proxy_agent.initiate_chat(prompt_agent,
+                                             messages=question,
+                                             max_turns=1,
+                                             summary_method="last_msg",
+                                            )
 
     result = user_proxy_agent.initiate_chat(manager_agent,
                                           message=question,
