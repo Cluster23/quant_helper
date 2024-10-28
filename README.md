@@ -34,3 +34,9 @@ Java Spring 서버는
 을 통해 최신 주가 및 재무 데이터를 수집하며, 에이전트들이 이를 활용해 분석 결과를 제공한다.
 
 QuantHelper는 에이전트 협업을 통해 종합적이고 유용한 주식 정보를 제공하는 AI 기반 주식 분석 시스템이다.
+
+<br>
+
+## 시스템 아키텍쳐
+![image](https://github.com/user-attachments/assets/4ad0d004-3c2e-4247-976f-991f24d7e095)
+
