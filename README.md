@@ -37,6 +37,7 @@ QuantHelper는 에이전트 협업을 통해 종합적이고 유용한 주식 �
 
 <br>
 
-## 시스템 아키텍쳐
-![image](https://github.com/user-attachments/assets/4ad0d004-3c2e-4247-976f-991f24d7e095)
+## 시스템 아키텍처
+![image](https://github.com/user-attachments/assets/f9b0bff6-96a0-49a7-a180-23111b9a8592)
+
 
